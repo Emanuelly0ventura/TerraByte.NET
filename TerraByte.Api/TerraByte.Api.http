@@ -1,0 +1,29 @@
+@TerraByte.Api_HostAddress = http://localhost:5292
+
+GET {{TerraByte.Api_HostAddress}}/api/FarmPlots
+Accept: application/json
+
+###
+
+POST {{TerraByte.Api_HostAddress}}/api/FarmPlots
+Content-Type: application/json
+
+{
+  "name": "Sitio Primavera",
+  "cep": "01001000",
+  "latitude": -23.55052,
+  "longitude": -46.63331,
+  "soilClassification": "Solo a classificar"
+}
+
+###
+
+GET {{TerraByte.Api_HostAddress}}/api/Research/cep/01001000
+Accept: application/json
+
+###
+
+GET {{TerraByte.Api_HostAddress}}/api/Research/geocode?city=Ribeirao%20Preto
+Accept: application/json
+
+###
