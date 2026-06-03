@@ -41,9 +41,9 @@ public class ResearchController(IResearchService researchService) : ControllerBa
     //Consultar propriedades do solo 
     [HttpGet("soil")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> FetchSoil([FromQuery] double latitude, [FromQuery] double longitude, [FromQuery] string property = "clay")
+    public async Task<IActionResult> FetchSoil([FromQuery] double latitude, [FromQuery] double longitude)
     {
-        var soil = await researchService.FetchSoilAsync(latitude, longitude, property);
+        var soil = await researchService.FetchSoilAsync(latitude, longitude);
         return Ok(soil);
     }
 
@@ -61,9 +61,9 @@ public class ResearchController(IResearchService researchService) : ControllerBa
     [HttpPost("farm-plots/{farmPlotId:guid}/soil-snapshots")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> SaveSoilSnapshot(Guid farmPlotId, [FromQuery] string property = "clay")
+    public async Task<IActionResult> SaveSoilSnapshot(Guid farmPlotId)
     {
-        var snapshot = await researchService.SaveSoilSnapshotAsync(farmPlotId, property);
+        var snapshot = await researchService.SaveSoilSnapshotAsync(farmPlotId);
         return snapshot is null ? NotFound() : Created(string.Empty, snapshot);
     }
 }

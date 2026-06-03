@@ -12,7 +12,7 @@ builder.Services.AddSwaggerGen(options =>
     {
         Title = "TerraByte API",
         Version = "v1",
-        Description = "API para apoiar agricultores com consultas de clima, solo, localização de terrenos, culturas e ocorrências de pragas."
+        Description = "API para apoiar agricultores com consultas de clima, solo, localização de terrenos e culturas."
     });
 
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
