@@ -28,5 +28,10 @@ public class FarmPlotConfiguration : IEntityTypeConfiguration<FarmPlot>
             .WithOne(x => x.FarmPlot)
             .HasForeignKey(x => x.FarmPlotId)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        builder
+            .HasOne(fp => fp.User)
+            .WithMany(u => u.FarmPlots)
+            .HasForeignKey(fp => fp.UserId);
     }
 }

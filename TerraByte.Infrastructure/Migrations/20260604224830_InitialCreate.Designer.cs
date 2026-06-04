@@ -11,8 +11,8 @@ using TerraByte.Infrastructure.Persistence;
 namespace TerraByte.Infrastructure.Migrations
 {
     [DbContext(typeof(TerraByteContext))]
-    [Migration("20260602034231_Initial")]
-    partial class Initial
+    [Migration("20260604224830_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -70,6 +70,9 @@ namespace TerraByte.Infrastructure.Migrations
                         .HasMaxLength(120)
                         .HasColumnType("TEXT");
 
+                    b.Property<double>("Clay")
+                        .HasColumnType("REAL");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
@@ -89,9 +92,19 @@ namespace TerraByte.Infrastructure.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("SoilClassification")
+                    b.Property<double>("Sand")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("Silt")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("SoilName")
+                        .IsRequired()
                         .HasMaxLength(120)
                         .HasColumnType("TEXT");
+
+                    b.Property<double>("SoilRadiusKm")
+                        .HasColumnType("REAL");
 
                     b.Property<string>("State")
                         .IsRequired()
@@ -103,7 +116,12 @@ namespace TerraByte.Infrastructure.Migrations
                         .HasMaxLength(180)
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("TB_FarmPlots", (string)null);
                 });
@@ -142,6 +160,46 @@ namespace TerraByte.Infrastructure.Migrations
                     b.ToTable("TB_ResearchSnapshots", (string)null);
                 });
 
+            modelBuilder.Entity("TerraByte.Domain.Entities.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DataNascimento")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FotoPerfil")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Genero")
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Senha")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Telefone")
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TB_Users", (string)null);
+                });
+
             modelBuilder.Entity("TerraByte.Domain.Entities.Crop", b =>
                 {
                     b.HasOne("TerraByte.Domain.Entities.FarmPlot", "FarmPlot")
@@ -151,6 +209,17 @@ namespace TerraByte.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("FarmPlot");
+                });
+
+            modelBuilder.Entity("TerraByte.Domain.Entities.FarmPlot", b =>
+                {
+                    b.HasOne("TerraByte.Domain.Entities.User", "User")
+                        .WithMany("FarmPlots")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TerraByte.Domain.Entities.ResearchSnapshot", b =>
@@ -169,6 +238,11 @@ namespace TerraByte.Infrastructure.Migrations
                     b.Navigation("Crops");
 
                     b.Navigation("ResearchSnapshots");
+                });
+
+            modelBuilder.Entity("TerraByte.Domain.Entities.User", b =>
+                {
+                    b.Navigation("FarmPlots");
                 });
 #pragma warning restore 612, 618
         }

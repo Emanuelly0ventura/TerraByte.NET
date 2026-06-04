@@ -8,7 +8,7 @@ public class TerraByteContext(DbContextOptions<TerraByteContext> options) : DbCo
     public DbSet<FarmPlot> FarmPlots => Set<FarmPlot>();
     public DbSet<Crop> Crops => Set<Crop>();
     public DbSet<ResearchSnapshot> ResearchSnapshots => Set<ResearchSnapshot>();
-
+    public DbSet<User> Users => Set<User>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(TerraByteContext).Assembly);

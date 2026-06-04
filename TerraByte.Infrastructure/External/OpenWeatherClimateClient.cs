@@ -14,12 +14,13 @@ public class OpenWeatherClimateClient(
     {
         var apiKey = configuration["OpenWeather:ApiKey"];
         if (string.IsNullOrWhiteSpace(apiKey))
-            throw new InvalidOperationException("Configure a chave em OpenWeather:ApiKey para consultar a previsão climática.");
+            throw new InvalidOperationException("Configure a chave em OpenWeather:ApiKey para consultar a previsao climatica.");
 
-        var safeDays = Math.Clamp(days, 1, 30);
+        var safeDays = Math.Clamp(days, 1, 5);
+        var timestamps = safeDays * 8;
         var lat = latitude.ToString(CultureInfo.InvariantCulture);
         var lon = longitude.ToString(CultureInfo.InvariantCulture);
-        var url = $"data/2.5/forecast/climate?lat={lat}&lon={lon}&cnt={safeDays}&units=metric&lang=pt_br&appid={apiKey}";
+        var url = $"data/2.5/forecast?lat={lat}&lon={lon}&cnt={timestamps}&units=metric&lang=pt_br&appid={apiKey}";
 
         using var response = await httpClient.GetAsync(url);
         response.EnsureSuccessStatusCode();
@@ -36,7 +37,7 @@ public class OpenWeatherClimateClient(
                 Latitude = latitude,
                 Longitude = longitude,
                 Days = safeDays,
-                Summary = "A API retornou a previsão, mas sem dias disponíveis."
+                Summary = "A API retornou a previsao, mas sem horarios disponiveis."
             };
         }
 
@@ -46,11 +47,16 @@ public class OpenWeatherClimateClient(
 
         foreach (var item in list.EnumerateArray())
         {
-            var temp = item.GetProperty("temp");
-            min = Math.Min(min, temp.GetProperty("min").GetDouble());
-            max = Math.Max(max, temp.GetProperty("max").GetDouble());
+            var main = item.GetProperty("main");
+            min = Math.Min(min, main.GetProperty("temp_min").GetDouble());
+            max = Math.Max(max, main.GetProperty("temp_max").GetDouble());
 
-            if (item.TryGetProperty("rain", out var rain))
+            if (!item.TryGetProperty("rain", out var rain))
+                continue;
+
+            if (rain.TryGetProperty("3h", out var rain3h))
+                rainTotal += rain3h.GetDouble();
+            else if (rain.ValueKind == JsonValueKind.Number)
                 rainTotal += rain.GetDouble();
         }
 
@@ -59,7 +65,7 @@ public class OpenWeatherClimateClient(
             Latitude = latitude,
             Longitude = longitude,
             Days = safeDays,
-            Summary = $"Previsão de {total} dias: mínima média observada {min:0.0} C, máxima {max:0.0} C e chuva acumulada aproximada de {rainTotal:0.0} mm."
+            Summary = $"Previsao de {safeDays} dia(s), com {total} leituras de 3 em 3 horas: minima {min:0.0} C, maxima {max:0.0} C e chuva acumulada aproximada de {rainTotal:0.0} mm."
         };
     }
 }

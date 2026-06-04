@@ -6,11 +6,29 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TerraByte.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "TB_Users",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Nome = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Email = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
+                    Senha = table.Column<string>(type: "TEXT", nullable: false),
+                    Telefone = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true),
+                    Genero = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true),
+                    DataNascimento = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    FotoPerfil = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TB_Users", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "TB_FarmPlots",
                 columns: table => new
@@ -24,12 +42,23 @@ namespace TerraByte.Infrastructure.Migrations
                     State = table.Column<string>(type: "TEXT", maxLength: 2, nullable: false),
                     Latitude = table.Column<double>(type: "REAL", nullable: true),
                     Longitude = table.Column<double>(type: "REAL", nullable: true),
-                    SoilClassification = table.Column<string>(type: "TEXT", maxLength: 120, nullable: true),
+                    SoilName = table.Column<string>(type: "TEXT", maxLength: 120, nullable: false),
+                    Clay = table.Column<double>(type: "REAL", nullable: false),
+                    Sand = table.Column<double>(type: "REAL", nullable: false),
+                    Silt = table.Column<double>(type: "REAL", nullable: false),
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    SoilRadiusKm = table.Column<double>(type: "REAL", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TB_FarmPlots", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TB_FarmPlots_TB_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "TB_Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -82,6 +111,11 @@ namespace TerraByte.Infrastructure.Migrations
                 column: "FarmPlotId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_TB_FarmPlots_UserId",
+                table: "TB_FarmPlots",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TB_ResearchSnapshots_FarmPlotId",
                 table: "TB_ResearchSnapshots",
                 column: "FarmPlotId");
@@ -98,6 +132,9 @@ namespace TerraByte.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "TB_FarmPlots");
+
+            migrationBuilder.DropTable(
+                name: "TB_Users");
         }
     }
 }
