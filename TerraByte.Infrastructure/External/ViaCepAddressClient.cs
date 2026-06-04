@@ -1,12 +1,12 @@
-using System.Text.Json;
-using TerraByte.Application.DTOs;
-using TerraByte.Application.Services.External;
+﻿using System.Text.Json;
+using TerraByte.Aplicacao.Dtos;
+using TerraByte.Aplicacao.Servicos.Externo;
 
-namespace TerraByte.Infrastructure.External;
+namespace TerraByte.Infraestrutura.Externo;
 
-public class ViaCepAddressClient(HttpClient httpClient) : IAddressLookupClient
+public class ClienteEnderecoViaCep(HttpClient httpClient) : IClienteConsultaEndereco
 {
-    public async Task<AddressLookupResponse?> FetchAddressAsync(string cep)
+    public async Task<RespostaConsultaEndereco?> BuscarEnderecoAsync(string cep)
     {
         var normalizedCep = cep.Replace("-", "").Trim();
         using var response = await httpClient.GetAsync($"ws/{normalizedCep}/json/");
@@ -21,13 +21,14 @@ public class ViaCepAddressClient(HttpClient httpClient) : IAddressLookupClient
         if (root.TryGetProperty("erro", out var erro) && erro.GetBoolean())
             return null;
 
-        return new AddressLookupResponse
+        return new RespostaConsultaEndereco
         {
             Cep = root.GetProperty("cep").GetString() ?? normalizedCep,
-            Street = root.GetProperty("logradouro").GetString() ?? string.Empty,
-            District = root.GetProperty("bairro").GetString() ?? string.Empty,
-            City = root.GetProperty("localidade").GetString() ?? string.Empty,
-            State = root.GetProperty("uf").GetString() ?? string.Empty
+            Logradouro = root.GetProperty("logradouro").GetString() ?? string.Empty,
+            Bairro = root.GetProperty("bairro").GetString() ?? string.Empty,
+            Cidade = root.GetProperty("localidade").GetString() ?? string.Empty,
+            Estado = root.GetProperty("uf").GetString() ?? string.Empty
         };
     }
 }
+

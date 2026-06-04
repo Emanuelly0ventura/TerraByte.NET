@@ -1,17 +1,18 @@
-using Microsoft.EntityFrameworkCore;
-using TerraByte.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using TerraByte.Dominio.Entidades;
 
-namespace TerraByte.Infrastructure.Persistence;
+namespace TerraByte.Infraestrutura.Persistencia;
 
-public class TerraByteContext(DbContextOptions<TerraByteContext> options) : DbContext(options)
+public class TerraByteContext(DbContextOptions<TerraByteContext> opcoes) : DbContext(opcoes)
 {
-    public DbSet<FarmPlot> FarmPlots => Set<FarmPlot>();
-    public DbSet<Crop> Crops => Set<Crop>();
-    public DbSet<ResearchSnapshot> ResearchSnapshots => Set<ResearchSnapshot>();
-    public DbSet<User> Users => Set<User>();
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    public DbSet<TerrenoAgricola> TerrenosAgricolas => Set<TerrenoAgricola>();
+    public DbSet<Cultura> Culturas => Set<Cultura>();
+    public DbSet<RegistroPesquisa> RegistrosPesquisa => Set<RegistroPesquisa>();
+    public DbSet<Usuario> Usuarios => Set<Usuario>();
+    protected override void OnModelCreating(ModelBuilder montadorModelo)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(TerraByteContext).Assembly);
-        base.OnModelCreating(modelBuilder);
+        montadorModelo.ApplyConfigurationsFromAssembly(typeof(TerraByteContext).Assembly);
+        base.OnModelCreating(montadorModelo);
     }
 }
+

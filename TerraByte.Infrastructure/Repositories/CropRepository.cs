@@ -1,15 +1,17 @@
-using TerraByte.Application.Interfaces;
-using TerraByte.Domain.Entities;
-using TerraByte.Infrastructure.Persistence;
+﻿using TerraByte.Aplicacao.Interfaces;
+using TerraByte.Dominio.Entidades;
+using TerraByte.Infraestrutura.Persistencia;
 
-namespace TerraByte.Infrastructure.Repositories;
+namespace TerraByte.Infraestrutura.Repositorios;
 
-public class CropRepository(TerraByteContext context) : Repository<Crop>(context), ICropRepository
+public class RepositorioCultura(TerraByteContext context) : Repositorio<Cultura>(context), IRepositorioCultura
 {
-    public IReadOnlyCollection<Crop> FetchByFarmPlot(Guid farmPlotId)
+    public IReadOnlyCollection<Cultura> BuscarPorTerrenoAgricola(Guid terrenoAgricolaId)
     {
-        return Context.Crops
-            .Where(x => x.FarmPlotId == farmPlotId)
+        return Context.Culturas
+            .Where(x => x.TerrenoAgricolaId == terrenoAgricolaId)
             .ToList();
     }
 }
+
+

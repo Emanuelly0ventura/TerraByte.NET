@@ -1,16 +1,18 @@
-using TerraByte.Application.Interfaces;
-using TerraByte.Domain.Entities;
-using TerraByte.Infrastructure.Persistence;
+﻿using TerraByte.Aplicacao.Interfaces;
+using TerraByte.Dominio.Entidades;
+using TerraByte.Infraestrutura.Persistencia;
 
-namespace TerraByte.Infrastructure.Repositories;
+namespace TerraByte.Infraestrutura.Repositorios;
 
-public class ResearchSnapshotRepository(TerraByteContext context)
-    : Repository<ResearchSnapshot>(context), IResearchSnapshotRepository
+public class RepositorioRegistroPesquisa(TerraByteContext context)
+    : Repositorio<RegistroPesquisa>(context), IRepositorioRegistroPesquisa
 {
-    public IReadOnlyCollection<ResearchSnapshot> FetchByFarmPlot(Guid farmPlotId)
+    public IReadOnlyCollection<RegistroPesquisa> BuscarPorTerrenoAgricola(Guid terrenoAgricolaId)
     {
-        return Context.ResearchSnapshots
-            .Where(x => x.FarmPlotId == farmPlotId)
+        return Context.RegistrosPesquisa
+            .Where(x => x.TerrenoAgricolaId == terrenoAgricolaId)
             .ToList();
     }
 }
+
+

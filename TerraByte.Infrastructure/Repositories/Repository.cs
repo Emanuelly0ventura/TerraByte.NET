@@ -1,41 +1,43 @@
-using Microsoft.EntityFrameworkCore;
-using TerraByte.Application.Interfaces;
-using TerraByte.Infrastructure.Persistence;
+﻿using Microsoft.EntityFrameworkCore;
+using TerraByte.Aplicacao.Interfaces;
+using TerraByte.Infraestrutura.Persistencia;
 
-namespace TerraByte.Infrastructure.Repositories;
+namespace TerraByte.Infraestrutura.Repositorios;
 
-public class Repository<T>(TerraByteContext context) : IRepository<T> where T : class
+public class Repositorio<T>(TerraByteContext context) : IRepositorio<T> where T : class
 {
     protected TerraByteContext Context { get; } = context;
     protected DbSet<T> Set => Context.Set<T>();
 
-    public virtual IReadOnlyCollection<T> FetchAll()
+    public virtual IReadOnlyCollection<T> ListarTodos()
     {
         return Set.ToList();
     }
 
-    public virtual T? FetchById(Guid id)
+    public virtual T? BuscarPorId(Guid id)
     {
         return Set.Find(id);
     }
 
-    public void Create(T entity)
+    public void Criar(T entidade)
     {
-        Set.Add(entity);
+        Set.Add(entidade);
     }
 
-    public void Patch(T entity)
+    public void AtualizarParcial(T entidade)
     {
-        Set.Update(entity);
+        Set.Update(entidade);
     }
 
-    public void Delete(T entity)
+    public void Excluir(T entidade)
     {
-        Set.Remove(entity);
+        Set.Remove(entidade);
     }
 
-    public void SaveChanges()
+    public void SalvarAlteracoes()
     {
         Context.SaveChanges();
     }
 }
+
+

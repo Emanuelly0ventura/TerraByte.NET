@@ -1,44 +1,44 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text.Json;
-using TerraByte.Application.DTOs;
-using TerraByte.Application.Services.External;
+using TerraByte.Aplicacao.Dtos;
+using TerraByte.Aplicacao.Servicos.Externo;
 
-namespace TerraByte.Infrastructure.External;
+namespace TerraByte.Infraestrutura.Externo;
 
-public class SoilGridsClient(HttpClient httpClient) : ISoilClient
+public class ClienteSoloSoilGrids(HttpClient httpClient) : IClienteSolo
 {
     private const double SoilSearchRadiusKm = 5.55;
 
-    public async Task<SoilClassificationResponse> FetchSoilAsync(double latitude, double longitude)
+    public async Task<RespostaClassificacaoSolo> BuscarSoloAsync(double latitude, double longitude)
     {
         foreach (var point in GetSamplePoints(latitude, longitude))
         {
-            var soil = await TryFetchSoilAtPointAsync(point.Latitude, point.Longitude);
-            if (soil is null)
+            var solo = await TryFetchSoilAtPointAsync(point.Latitude, point.Longitude);
+            if (solo is null)
                 continue;
 
-            var (clay, sand, silt) = NormalizeTexture(soil.Value.Clay, soil.Value.Sand, soil.Value.Silt);
+            var (clay, sand, silt) = NormalizeTexture(solo.Value.Argila, solo.Value.Areia, solo.Value.Silte);
 
-            return new SoilClassificationResponse
+            return new RespostaClassificacaoSolo
             {
                 Latitude = latitude,
                 Longitude = longitude,
-                SoilName = ClassifyTexture(clay, sand, silt),
-                Clay = Math.Round(clay, 2),
-                Sand = Math.Round(sand, 2),
-                Silt = Math.Round(silt, 2),
-                SoilRadiusKm = SoilSearchRadiusKm
+                NomeSolo = ClassifyTexture(clay, sand, silt),
+                Argila = Math.Round(clay, 2),
+                Areia = Math.Round(sand, 2),
+                Silte = Math.Round(silt, 2),
+                RaioSoloKm = SoilSearchRadiusKm
             };
         }
 
         throw new InvalidOperationException("SoilGrids nao retornou valores de argila, areia e silte no raio configurado.");
     }
 
-    private async Task<(double Clay, double Sand, double Silt)?> TryFetchSoilAtPointAsync(double latitude, double longitude)
+    private async Task<(double Argila, double Areia, double Silte)?> TryFetchSoilAtPointAsync(double latitude, double longitude)
     {
         var lat = latitude.ToString(CultureInfo.InvariantCulture);
         var lon = longitude.ToString(CultureInfo.InvariantCulture);
-        var url = $"soilgrids/v2.0/properties/query?lat={lat}&lon={lon}&property=clay&property=sand&property=silt&depth=0-5cm&value=mean";
+        var url = $"soilgrids/v2.0/properties/query?lat={lat}&lon={lon}&propriedade=clay&propriedade=sand&propriedade=silt&depth=0-5cm&value=mean";
 
         using var response = await httpClient.GetAsync(url);
         response.EnsureSuccessStatusCode();
@@ -98,7 +98,7 @@ public class SoilGridsClient(HttpClient httpClient) : ISoilClient
         yield return (latitude - latOffset, longitude - lonOffset);
     }
 
-    private static (double Clay, double Sand, double Silt) NormalizeTexture(double clay, double sand, double silt)
+    private static (double Argila, double Areia, double Silte) NormalizeTexture(double clay, double sand, double silt)
     {
         if (clay + sand + silt > 150)
         {
@@ -157,3 +157,4 @@ public class SoilGridsClient(HttpClient httpClient) : ISoilClient
         return "SOLO TEXTURAL INDEFINIDO";
     }
 }
+

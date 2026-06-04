@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TerraByte.Domain.Entities;
+using TerraByte.Dominio.Entidades;
 
-public class UserConfiguration : IEntityTypeConfiguration<User>
+public class ConfiguracaoUsuario : IEntityTypeConfiguration<Usuario>
 {
-    public void Configure(EntityTypeBuilder<User> builder)
+    public void Configure(EntityTypeBuilder<Usuario> builder)
     {
         builder.ToTable("TB_Users");
 
@@ -33,11 +33,12 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.DataNascimento)
             .IsRequired();
         
-        builder.HasMany(x => x.FarmPlots)
-            .WithOne(x => x.User)
-            .HasForeignKey(x => x.UserId)
+        builder.HasMany(x => x.TerrenosAgricolas)
+            .WithOne(x => x.Usuario)
+            .HasForeignKey(x => x.UsuarioId)
             .OnDelete(DeleteBehavior.Cascade);
     }
     
     
 }
+

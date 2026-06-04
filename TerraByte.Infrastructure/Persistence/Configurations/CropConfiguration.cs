@@ -1,18 +1,20 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TerraByte.Domain.Entities;
+using TerraByte.Dominio.Entidades;
 
-namespace TerraByte.Infrastructure.Persistence.Configurations;
+namespace TerraByte.Infraestrutura.Persistencia.Configuracoes;
 
-public class CropConfiguration : IEntityTypeConfiguration<Crop>
+public class ConfiguracaoCultura : IEntityTypeConfiguration<Cultura>
 {
-    public void Configure(EntityTypeBuilder<Crop> builder)
+    public void Configure(EntityTypeBuilder<Cultura> builder)
     {
         builder.ToTable("TB_Crops");
         builder.HasKey(x => x.Id);
 
-        builder.Property(x => x.Name).IsRequired().HasMaxLength(120);
-        builder.Property(x => x.SeedName).IsRequired().HasMaxLength(120);
-        builder.Property(x => x.Notes).HasMaxLength(500);
+        builder.Property(x => x.Nome).IsRequired().HasMaxLength(120);
+        builder.Property(x => x.NomeSemente).IsRequired().HasMaxLength(120);
+        builder.Property(x => x.Observacoes).HasMaxLength(500);
     }
 }
+
+

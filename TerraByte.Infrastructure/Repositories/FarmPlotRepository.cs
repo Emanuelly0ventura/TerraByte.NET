@@ -1,25 +1,26 @@
-using Microsoft.EntityFrameworkCore;
-using TerraByte.Application.Interfaces;
-using TerraByte.Domain.Entities;
-using TerraByte.Infrastructure.Persistence;
+﻿using Microsoft.EntityFrameworkCore;
+using TerraByte.Aplicacao.Interfaces;
+using TerraByte.Dominio.Entidades;
+using TerraByte.Infraestrutura.Persistencia;
 
-namespace TerraByte.Infrastructure.Repositories;
+namespace TerraByte.Infraestrutura.Repositorios;
 
-public class FarmPlotRepository(TerraByteContext context)
-    : Repository<FarmPlot>(context), IFarmPlotRepository
+public class RepositorioTerrenoAgricola(TerraByteContext context)
+    : Repositorio<TerrenoAgricola>(context), IRepositorioTerrenoAgricola
 {
-    public override IReadOnlyCollection<FarmPlot> FetchAll()
+    public override IReadOnlyCollection<TerrenoAgricola> ListarTodos()
     {
-        return Context.FarmPlots
-            .Include(x => x.Crops)
+        return Context.TerrenosAgricolas
+            .Include(x => x.Culturas)
             .ToList();
     }
 
-    public override FarmPlot? FetchById(Guid id)
+    public override TerrenoAgricola? BuscarPorId(Guid id)
     {
-        return Context.FarmPlots
-            .Include(x => x.Crops)
-            .Include(x => x.ResearchSnapshots)
+        return Context.TerrenosAgricolas
+            .Include(x => x.Culturas)
+            .Include(x => x.RegistrosPesquisa)
             .FirstOrDefault(x => x.Id == id);
     }
 }
+

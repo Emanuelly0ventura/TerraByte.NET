@@ -1,37 +1,39 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TerraByte.Domain.Entities;
+using TerraByte.Dominio.Entidades;
 
-namespace TerraByte.Infrastructure.Persistence.Configurations;
+namespace TerraByte.Infraestrutura.Persistencia.Configuracoes;
 
-public class FarmPlotConfiguration : IEntityTypeConfiguration<FarmPlot>
+public class ConfiguracaoTerrenoAgricola : IEntityTypeConfiguration<TerrenoAgricola>
 {
-    public void Configure(EntityTypeBuilder<FarmPlot> builder)
+    public void Configure(EntityTypeBuilder<TerrenoAgricola> builder)
     {
         builder.ToTable("TB_FarmPlots");
         builder.HasKey(x => x.Id);
 
-        builder.Property(x => x.Name).IsRequired().HasMaxLength(150);
+        builder.Property(x => x.Nome).IsRequired().HasMaxLength(150);
         builder.Property(x => x.Cep).IsRequired().HasMaxLength(9);
-        builder.Property(x => x.Street).HasMaxLength(180);
-        builder.Property(x => x.District).HasMaxLength(120);
-        builder.Property(x => x.City).HasMaxLength(120);
-        builder.Property(x => x.State).HasMaxLength(2);
-        builder.Property(x => x.SoilName).IsRequired().HasMaxLength(120);
+        builder.Property(x => x.Logradouro).HasMaxLength(180);
+        builder.Property(x => x.Bairro).HasMaxLength(120);
+        builder.Property(x => x.Cidade).HasMaxLength(120);
+        builder.Property(x => x.Estado).HasMaxLength(2);
+        builder.Property(x => x.NomeSolo).IsRequired().HasMaxLength(120);
 
-        builder.HasMany(x => x.Crops)
-            .WithOne(x => x.FarmPlot)
-            .HasForeignKey(x => x.FarmPlotId)
+        builder.HasMany(x => x.Culturas)
+            .WithOne(x => x.TerrenoAgricola)
+            .HasForeignKey(x => x.TerrenoAgricolaId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasMany(x => x.ResearchSnapshots)
-            .WithOne(x => x.FarmPlot)
-            .HasForeignKey(x => x.FarmPlotId)
+        builder.HasMany(x => x.RegistrosPesquisa)
+            .WithOne(x => x.TerrenoAgricola)
+            .HasForeignKey(x => x.TerrenoAgricolaId)
             .OnDelete(DeleteBehavior.Cascade);
         
         builder
-            .HasOne(fp => fp.User)
-            .WithMany(u => u.FarmPlots)
-            .HasForeignKey(fp => fp.UserId);
+            .HasOne(fp => fp.Usuario)
+            .WithMany(u => u.TerrenosAgricolas)
+            .HasForeignKey(fp => fp.UsuarioId);
     }
 }
+
+

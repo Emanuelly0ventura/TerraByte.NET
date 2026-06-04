@@ -1,18 +1,18 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
-using TerraByte.Application.DTOs;
-using TerraByte.Application.Services.External;
+using TerraByte.Aplicacao.Dtos;
+using TerraByte.Aplicacao.Servicos.Externo;
 
-namespace TerraByte.Infrastructure.External;
+namespace TerraByte.Infraestrutura.Externo;
 
-public class OpenWeatherClimateClient(
+public class ClienteClimaOpenWeather(
     HttpClient httpClient,
-    IConfiguration configuration) : IClimateClient
+    IConfiguration configuracao) : IClienteClima
 {
-    public async Task<ClimateForecastResponse> FetchClimateAsync(double latitude, double longitude, int days)
+    public async Task<RespostaPrevisaoClimatica> BuscarClimaAsync(double latitude, double longitude, int days)
     {
-        var apiKey = configuration["OpenWeather:ApiKey"];
+        var apiKey = configuracao["OpenWeather:ApiKey"];
         if (string.IsNullOrWhiteSpace(apiKey))
             throw new InvalidOperationException("Configure a chave em OpenWeather:ApiKey para consultar a previsao climatica.");
 
@@ -32,12 +32,12 @@ public class OpenWeatherClimateClient(
         var total = list.GetArrayLength();
         if (total == 0)
         {
-            return new ClimateForecastResponse
+            return new RespostaPrevisaoClimatica
             {
                 Latitude = latitude,
                 Longitude = longitude,
-                Days = safeDays,
-                Summary = "A API retornou a previsao, mas sem horarios disponiveis."
+                Dias = safeDays,
+                Resumo = "A API retornou a previsao, mas sem horarios disponiveis."
             };
         }
 
@@ -60,12 +60,13 @@ public class OpenWeatherClimateClient(
                 rainTotal += rain.GetDouble();
         }
 
-        return new ClimateForecastResponse
+        return new RespostaPrevisaoClimatica
         {
             Latitude = latitude,
             Longitude = longitude,
-            Days = safeDays,
-            Summary = $"Previsao de {safeDays} dia(s), com {total} leituras de 3 em 3 horas: minima {min:0.0} C, maxima {max:0.0} C e chuva acumulada aproximada de {rainTotal:0.0} mm."
+            Dias = safeDays,
+            Resumo = $"Previsao de {safeDays} dia(s), com {total} leituras de 3 em 3 horas: minima {min:0.0} C, maxima {max:0.0} C e chuva acumulada aproximada de {rainTotal:0.0} mm."
         };
     }
 }
+

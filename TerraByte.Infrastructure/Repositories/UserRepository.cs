@@ -1,48 +1,49 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TerraByte.Application.Interfaces;
-using TerraByte.Domain.Entities;
-using TerraByte.Infrastructure.Persistence;
+using TerraByte.Aplicacao.Interfaces;
+using TerraByte.Dominio.Entidades;
+using TerraByte.Infraestrutura.Persistencia;
 
-namespace TerraByte.Infrastructure.Repositories;
+namespace TerraByte.Infraestrutura.Repositorios;
 
-public class UserRepository(TerraByteContext context) : IUserRepository
+public class RepositorioUsuario(TerraByteContext context) : IRepositorioUsuario
 {
-    public IReadOnlyCollection<User> FetchAll()
+    public IReadOnlyCollection<Usuario> ListarTodos()
     {
-        return context.Users
+        return context.Usuarios
             .AsNoTracking()
             .ToList();
     }
 
-    public User? FetchById(Guid id)
+    public Usuario? BuscarPorId(Guid id)
     {
-        return context.Users
+        return context.Usuarios
             .FirstOrDefault(u => u.Id == id);
     }
 
-    public User? FetchByEmail(string email)
+    public Usuario? BuscarPorEmail(string email)
     {
-        return context.Users
+        return context.Usuarios
             .FirstOrDefault(u => u.Email == email);
     }
 
-    public void Create(User user)
+    public void Criar(Usuario usuario)
     {
-        context.Users.Add(user);
+        context.Usuarios.Add(usuario);
     }
 
-    public void Patch(User entity)
+    public void AtualizarParcial(Usuario entidade)
     {
         throw new NotImplementedException();
     }
 
-    public void Delete(User user)
+    public void Excluir(Usuario usuario)
     {
-        context.Users.Remove(user);
+        context.Usuarios.Remove(usuario);
     }
 
-    public void SaveChanges()
+    public void SalvarAlteracoes()
     {
         context.SaveChanges();
     }
 }
+

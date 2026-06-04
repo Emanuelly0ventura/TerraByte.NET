@@ -4,57 +4,57 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TerraByte.Infrastructure.Persistence;
+using TerraByte.Infraestrutura.Persistencia;
 
 #nullable disable
 
-namespace TerraByte.Infrastructure.Migrations
+namespace TerraByte.Infraestrutura.Migrations
 {
     [DbContext(typeof(TerraByteContext))]
     [Migration("20260604224830_InitialCreate")]
-    partial class InitialCreate
+    partial class CriacaoInicial
     {
         /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder montadorModelo)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.5");
+            montadorModelo.HasAnnotation("ProductVersion", "9.0.5");
 
-            modelBuilder.Entity("TerraByte.Domain.Entities.Crop", b =>
+            montadorModelo.Entity("TerraByte.Dominio.Entidades.Cultura", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("FarmPlotId")
+                    b.Property<Guid>("TerrenoAgricolaId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(120)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Notes")
+                    b.Property<string>("Observacoes")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
-                    b.Property<DateOnly>("PlantingDate")
+                    b.Property<DateOnly>("DataPlantio")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("SeedName")
+                    b.Property<string>("NomeSemente")
                         .IsRequired()
                         .HasMaxLength(120)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FarmPlotId");
+                    b.HasIndex("TerrenoAgricolaId");
 
                     b.ToTable("TB_Crops", (string)null);
                 });
 
-            modelBuilder.Entity("TerraByte.Domain.Entities.FarmPlot", b =>
+            montadorModelo.Entity("TerraByte.Dominio.Entidades.TerrenoAgricola", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -65,18 +65,18 @@ namespace TerraByte.Infrastructure.Migrations
                         .HasMaxLength(9)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("City")
+                    b.Property<string>("Cidade")
                         .IsRequired()
                         .HasMaxLength(120)
                         .HasColumnType("TEXT");
 
-                    b.Property<double>("Clay")
+                    b.Property<double>("Argila")
                         .HasColumnType("REAL");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CriadoEm")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("District")
+                    b.Property<string>("Bairro")
                         .IsRequired()
                         .HasMaxLength(120)
                         .HasColumnType("TEXT");
@@ -87,80 +87,80 @@ namespace TerraByte.Infrastructure.Migrations
                     b.Property<double?>("Longitude")
                         .HasColumnType("REAL");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("TEXT");
 
-                    b.Property<double>("Sand")
+                    b.Property<double>("Areia")
                         .HasColumnType("REAL");
 
-                    b.Property<double>("Silt")
+                    b.Property<double>("Silte")
                         .HasColumnType("REAL");
 
-                    b.Property<string>("SoilName")
+                    b.Property<string>("NomeSolo")
                         .IsRequired()
                         .HasMaxLength(120)
                         .HasColumnType("TEXT");
 
-                    b.Property<double>("SoilRadiusKm")
+                    b.Property<double>("RaioSoloKm")
                         .HasColumnType("REAL");
 
-                    b.Property<string>("State")
+                    b.Property<string>("Estado")
                         .IsRequired()
                         .HasMaxLength(2)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Street")
+                    b.Property<string>("Logradouro")
                         .IsRequired()
                         .HasMaxLength(180)
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("UsuarioId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("TB_FarmPlots", (string)null);
                 });
 
-            modelBuilder.Entity("TerraByte.Domain.Entities.ResearchSnapshot", b =>
+            montadorModelo.Entity("TerraByte.Dominio.Entidades.RegistroPesquisa", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("FarmPlotId")
+                    b.Property<Guid>("TerrenoAgricolaId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Kind")
+                    b.Property<string>("Tipo")
                         .IsRequired()
                         .HasMaxLength(60)
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("RequestedAt")
+                    b.Property<DateTime>("SolicitadoEm")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Source")
+                    b.Property<string>("Fonte")
                         .IsRequired()
                         .HasMaxLength(80)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Summary")
+                    b.Property<string>("Resumo")
                         .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FarmPlotId");
+                    b.HasIndex("TerrenoAgricolaId");
 
                     b.ToTable("TB_ResearchSnapshots", (string)null);
                 });
 
-            modelBuilder.Entity("TerraByte.Domain.Entities.User", b =>
+            montadorModelo.Entity("TerraByte.Dominio.Entidades.Usuario", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -200,51 +200,53 @@ namespace TerraByte.Infrastructure.Migrations
                     b.ToTable("TB_Users", (string)null);
                 });
 
-            modelBuilder.Entity("TerraByte.Domain.Entities.Crop", b =>
+            montadorModelo.Entity("TerraByte.Dominio.Entidades.Cultura", b =>
                 {
-                    b.HasOne("TerraByte.Domain.Entities.FarmPlot", "FarmPlot")
-                        .WithMany("Crops")
-                        .HasForeignKey("FarmPlotId")
+                    b.HasOne("TerraByte.Dominio.Entidades.TerrenoAgricola", "TerrenoAgricola")
+                        .WithMany("Culturas")
+                        .HasForeignKey("TerrenoAgricolaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("FarmPlot");
+                    b.Navigation("TerrenoAgricola");
                 });
 
-            modelBuilder.Entity("TerraByte.Domain.Entities.FarmPlot", b =>
+            montadorModelo.Entity("TerraByte.Dominio.Entidades.TerrenoAgricola", b =>
                 {
-                    b.HasOne("TerraByte.Domain.Entities.User", "User")
-                        .WithMany("FarmPlots")
-                        .HasForeignKey("UserId")
+                    b.HasOne("TerraByte.Dominio.Entidades.Usuario", "Usuario")
+                        .WithMany("TerrenosAgricolas")
+                        .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Usuario");
                 });
 
-            modelBuilder.Entity("TerraByte.Domain.Entities.ResearchSnapshot", b =>
+            montadorModelo.Entity("TerraByte.Dominio.Entidades.RegistroPesquisa", b =>
                 {
-                    b.HasOne("TerraByte.Domain.Entities.FarmPlot", "FarmPlot")
-                        .WithMany("ResearchSnapshots")
-                        .HasForeignKey("FarmPlotId")
+                    b.HasOne("TerraByte.Dominio.Entidades.TerrenoAgricola", "TerrenoAgricola")
+                        .WithMany("RegistrosPesquisa")
+                        .HasForeignKey("TerrenoAgricolaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("FarmPlot");
+                    b.Navigation("TerrenoAgricola");
                 });
 
-            modelBuilder.Entity("TerraByte.Domain.Entities.FarmPlot", b =>
+            montadorModelo.Entity("TerraByte.Dominio.Entidades.TerrenoAgricola", b =>
                 {
-                    b.Navigation("Crops");
+                    b.Navigation("Culturas");
 
-                    b.Navigation("ResearchSnapshots");
+                    b.Navigation("RegistrosPesquisa");
                 });
 
-            modelBuilder.Entity("TerraByte.Domain.Entities.User", b =>
+            montadorModelo.Entity("TerraByte.Dominio.Entidades.Usuario", b =>
                 {
-                    b.Navigation("FarmPlots");
+                    b.Navigation("TerrenosAgricolas");
                 });
 #pragma warning restore 612, 618
         }
     }
 }
+
+
