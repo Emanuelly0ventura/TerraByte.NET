@@ -1,12 +1,12 @@
-﻿using TerraByte.Aplicacao.Dtos;
+﻿using TerraByte.Application.DTOs;
 
-namespace TerraByte.Aplicacao.Servicos.Interfaces;
+namespace TerraByte.Application.Services.Interfaces;
 
-public interface IServicoTerrenoAgricola
+public interface ITerrenoAgricolaService
 {
     IReadOnlyCollection<RespostaTerrenoAgricola> ListarTodos();
     RespostaTerrenoAgricola? BuscarPorId(Guid id);
-    Task<RespostaTerrenoAgricola> CriarAsync(RequisicaoTerrenoAgricola requisicao);
+    Task<RespostaTerrenoAgricola> CriarAsync(TerrenoAgricolaDtos requisicao);
     RespostaTerrenoAgricola? AtualizarParcial(Guid id, RequisicaoAtualizarTerrenoAgricola requisicao);
     bool Excluir(Guid id);
 }

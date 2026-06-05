@@ -1,14 +1,14 @@
-﻿using TerraByte.Aplicacao.Dtos;
-using TerraByte.Aplicacao.Interfaces;
-using TerraByte.Aplicacao.Servicos.Externo;
-using TerraByte.Aplicacao.Servicos.Interfaces;
-using TerraByte.Dominio.Entidades;
+﻿using TerraByte.Application.DTOs;
+using TerraByte.Application.Interfaces;
+using TerraByte.Application.Services.External;
+using TerraByte.Application.Services.Interfaces;
+using TerraByte.Domain.Entities;
 
-namespace TerraByte.Aplicacao.Servicos.Implementacoes;
+namespace TerraByte.Application.Services.Implementations;
 
 public class CulturaService(
-    IRepositorioTerrenoAgricola repositorioTerrenoAgricola,
-    IClienteClima clienteClima) : IServicoCultura
+    ITerrenoAgricolaRepository repositorioTerrenoAgricola,
+    IClienteClima clienteClima) : ICulturaService
 {
     private static readonly IReadOnlyCollection<PlantioInfo> Plantios = [
         new("4d9f5671-8371-4a29-8342-b292ffe2b939", "Mandioca", 22, 34, 40, ["SETEMBRO", "OUTUBRO", "NOVEMBRO"], "https://exemplo.com/mandioca.png", [TipoSoloEnum.AREIA], ["glifosato", "mancozebe"]),

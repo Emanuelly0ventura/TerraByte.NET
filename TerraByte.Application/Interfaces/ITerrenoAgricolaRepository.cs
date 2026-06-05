@@ -1,8 +1,8 @@
-﻿using TerraByte.Dominio.Entidades;
+﻿using TerraByte.Domain.Entities;
 
-namespace TerraByte.Aplicacao.Interfaces;
+namespace TerraByte.Application.Interfaces;
 
-public interface IRepositorioTerrenoAgricola : IRepositorio<TerrenoAgricola>
+public interface ITerrenoAgricolaRepository : IRepository<TerrenoAgricola>
 {
 }
 

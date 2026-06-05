@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TerraByte.Aplicacao.Dtos;
-using TerraByte.Aplicacao.Servicos.Interfaces;
+using TerraByte.Application.DTOs;
+using TerraByte.Application.Services.Interfaces;
 
-namespace TerraByte.Api.Controladores;
+namespace TerraByte.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
-public class TerrenosAgricolasController(IServicoTerrenoAgricola servicoTerrenoAgricola) : ControllerBase
+public class TerrenosAgricolasController(ITerrenoAgricolaService servicoTerrenoAgricola) : ControllerBase
 {
     //Listar todos os terrenos cadastradosr
     [HttpGet]
@@ -31,7 +31,7 @@ public class TerrenosAgricolasController(IServicoTerrenoAgricola servicoTerrenoA
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Criar(RequisicaoTerrenoAgricola requisicao)
+    public async Task<IActionResult> Criar(TerrenoAgricolaDtos requisicao)
     {
         var criado = await servicoTerrenoAgricola.CriarAsync(requisicao);
         return CreatedAtAction(nameof(BuscarPorId), new { id = criado.Id }, criado);

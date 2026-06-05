@@ -1,16 +1,16 @@
-﻿using TerraByte.Aplicacao.Dtos;
-using TerraByte.Aplicacao.Interfaces;
-using TerraByte.Aplicacao.Servicos.Externo;
-using TerraByte.Aplicacao.Servicos.Interfaces;
-using TerraByte.Dominio.Entidades;
+﻿using TerraByte.Application.DTOs;
+using TerraByte.Application.Interfaces;
+using TerraByte.Application.Services.External;
+using TerraByte.Application.Services.Interfaces;
+using TerraByte.Domain.Entities;
 
-namespace TerraByte.Aplicacao.Servicos.Implementacoes;
+namespace TerraByte.Application.Services.Implementations;
 
-public class ServicoTerrenoAgricola(
-    IRepositorioTerrenoAgricola repositorioTerrenoAgricola,
-    IClienteConsultaEndereco clienteConsultaEndereco,
+public class TerrenoAgricolaService(
+    ITerrenoAgricolaRepository repositorioTerrenoAgricola,
+    IExternalApiClient clienteConsultaEndereco,
     IClienteGeocodificacao clienteGeocodificacao,
-    IClienteSolo clienteSolo) : IServicoTerrenoAgricola
+    IClienteSolo clienteSolo) : ITerrenoAgricolaService
 {
     public IReadOnlyCollection<RespostaTerrenoAgricola> ListarTodos()
     {
@@ -24,8 +24,8 @@ public class ServicoTerrenoAgricola(
         var terreno = repositorioTerrenoAgricola.BuscarPorId(id);
         return terreno is null ? null : RespostaTerrenoAgricola.DoDominio(terreno);
     }
-
-    public async Task<RespostaTerrenoAgricola> CriarAsync(RequisicaoTerrenoAgricola requisicao)
+    // // // // // //
+    public async Task<RespostaTerrenoAgricola> CriarAsync(TerrenoAgricolaDtos requisicao)
     {
         if (string.IsNullOrWhiteSpace(requisicao.Nome))
             throw new ArgumentException("O nome do terreno deve ser informado.");
@@ -45,6 +45,8 @@ public class ServicoTerrenoAgricola(
         {
             Nome = requisicao.Nome.Trim(),
             Cep = endereco.Cep,
+            UsuarioId = requisicao.UsuarioId,
+
             Latitude = coordenadas.Latitude,
             Longitude = coordenadas.Longitude,
             NomeSolo = solo.NomeSolo,

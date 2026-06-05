@@ -1,23 +1,24 @@
-using TerraByte.Application.DTOs;
+﻿using TerraByte.Application.DTOs;
 
 namespace TerraByte.Application.Services.External;
 
-public interface IAddressLookupClient
+public interface IExternalApiClient
 {
-    Task<AddressLookupResponse?> FetchAddressAsync(string cep);
+    Task<RespostaConsultaEndereco?> BuscarEnderecoAsync(string cep);
 }
 
-public interface IGeocodingClient
+public interface IClienteGeocodificacao
 {
-    Task<GeocodeResponse?> FetchCoordinatesAsync(string location);
+    Task<RespostaGeocodificacao?> BuscarCoordenadasAsync(string localizacao);
 }
 
-public interface IClimateClient
+public interface IClienteClima
 {
-    Task<ClimateForecastResponse> FetchClimateAsync(double latitude, double longitude, int days);
+    Task<RespostaPrevisaoClimatica> BuscarClimaAsync(double latitude, double longitude, int days);
 }
 
-public interface ISoilClient
+public interface IClienteSolo
 {
-    Task<SoilClassificationResponse> FetchSoilAsync(double latitude, double longitude);
+    Task<RespostaClassificacaoSolo> BuscarSoloAsync(double latitude, double longitude);
 }
+

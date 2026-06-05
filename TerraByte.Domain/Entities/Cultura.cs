@@ -1,4 +1,4 @@
-﻿namespace TerraByte.Dominio.Entidades;
+﻿namespace TerraByte.Domain.Entities;
 
 public class Cultura
 {

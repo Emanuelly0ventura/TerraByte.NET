@@ -1,4 +1,4 @@
-namespace TerraByte.Application.Services.Translators;
+﻿namespace TerraByte.Application.Services.Translators;
 
 public static class SoilPropertyTranslator
 {
@@ -18,11 +18,11 @@ public static class SoilPropertyTranslator
 
         { "carbono", "soc" },
         { "carbono organico", "soc" },
-        { "carbono orgânico", "soc" },
+        { "carbono orgÃ¢nico", "soc" },
         { "soc", "soc" },
 
         { "nitrogenio", "nitrogen" },
-        { "nitrogênio", "nitrogen" },
+        { "nitrogÃªnio", "nitrogen" },
         { "nitrogen", "nitrogen" },
 
         { "densidade", "bdod" },
@@ -30,18 +30,19 @@ public static class SoilPropertyTranslator
 
         { "cec", "cec" },
         { "capacidade de troca cationica", "cec" },
-        { "capacidade de troca catiônica", "cec" }
+        { "capacidade de troca catiÃ´nica", "cec" }
     };
 
-    public static string Translate(string property)
+    public static string Traduzir(string propriedade)
     {
-        if (string.IsNullOrWhiteSpace(property))
+        if (string.IsNullOrWhiteSpace(propriedade))
             return "clay";
 
-        var normalized = property.Trim().ToLowerInvariant();
+        var normalizado = propriedade.Trim().ToLowerInvariant();
 
-        return Translations.TryGetValue(normalized, out var translated)
-            ? translated
-            : normalized;
+        return Translations.TryGetValue(normalizado, out var traduzido)
+            ? traduzido
+            : normalizado;
     }
 }
+

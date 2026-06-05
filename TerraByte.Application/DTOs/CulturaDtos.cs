@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace TerraByte.Aplicacao.Dtos;
+namespace TerraByte.Application.DTOs;
 
 public enum TipoSoloEnum
 {

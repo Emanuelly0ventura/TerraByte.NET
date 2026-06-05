@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using TerraByte.Application.Interfaces;
 using TerraByte.Application.Services.External;
 using TerraByte.Application.Services.Implementations;
@@ -9,55 +9,59 @@ using TerraByte.Infrastructure.Repositories;
 
 namespace TerraByte.Api.Extensions;
 
-public static class ServiceCollectionExtensions
+public static class ExtensoesColecaoServicos
 {
-    public static IServiceCollection AddTerraBytePersistence(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AdicionarPersistenciaTerraByte(this IServiceCollection servicos, IConfiguration configuracao)
     {
-        var connectionString = configuration.GetConnectionString("TerraByteSqlite")
+        var stringConexao = configuracao.GetConnectionString("TerraByteSqlite")
             ?? "Data Source=terrabyte.db";
 
-        services.AddDbContext<TerraByteContext>(options =>
-            options.UseSqlite(connectionString));
+        servicos.AddDbContext<TerraByteContext>(opcoes =>
+            opcoes.UseSqlite(stringConexao));
 
-        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-        services.AddScoped<IFarmPlotRepository, FarmPlotRepository>();
-        services.AddScoped<ICropRepository, CropRepository>();
-        services.AddScoped<IResearchSnapshotRepository, ResearchSnapshotRepository>();
+        servicos.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        servicos.AddScoped<ITerrenoAgricolaRepository, TerrenoAgricolaRepository>();
+        servicos.AddScoped<ICulturaRepository, CulturaRepository>();
+        servicos.AddScoped<IRegistroPesquisaRepository, RegistroPesquisaRepository>();
+        servicos.AddScoped<IUserRepository, UserRepository>();
 
-        return services;
+        return servicos;
     }
 
-    public static IServiceCollection AddTerraByteServices(this IServiceCollection services)
+    public static IServiceCollection AdicionarServicosTerraByte(this IServiceCollection servicos)
     {
-        services.AddScoped<IFarmPlotService, FarmPlotService>();
-        services.AddScoped<ICropService, CropService>();
-        services.AddScoped<IResearchService, ResearchService>();
+        servicos.AddScoped<ITerrenoAgricolaService, TerrenoAgricolaService>();
+        servicos.AddScoped<ICulturaService, CulturaService>();
+        servicos.AddScoped<IRegistroPesquisaService, RegistroPesquisaService>();
+        servicos.AddScoped<IUserService, UserService>();
 
-        return services;
+        return servicos;
     }
 
-    public static IServiceCollection AddExternalApiClients(this IServiceCollection services)
+    public static IServiceCollection AdicionarClientesApisExternas(this IServiceCollection servicos)
     {
-        services.AddHttpClient<IAddressLookupClient, ViaCepAddressClient>(client =>
+        servicos.AddHttpClient<IExternalApiClient, ClientEnderecoViaCep>(client =>
         {
             client.BaseAddress = new Uri("https://viacep.com.br/");
         });
 
-        services.AddHttpClient<IGeocodingClient, OpenMeteoGeocodingClient>(client =>
+        servicos.AddHttpClient<IClienteGeocodificacao, ClientGeocodificacaoOpenMeteo>(client =>
         {
             client.BaseAddress = new Uri("https://geocoding-api.open-meteo.com/");
         });
 
-        services.AddHttpClient<IClimateClient, OpenWeatherClimateClient>(client =>
+        servicos.AddHttpClient<IClienteClima, ClientClimaOpenWeather>(client =>
         {
-            client.BaseAddress = new Uri("https://pro.openweathermap.org/");
+            client.BaseAddress = new Uri("https://api.openweathermap.org/");
         });
 
-        services.AddHttpClient<ISoilClient, SoilGridsClient>(client =>
+        servicos.AddHttpClient<IClienteSolo, ClientSoloSoilGrids>(client =>
         {
             client.BaseAddress = new Uri("https://rest.isric.org/");
         });
 
-        return services;
+        return servicos;
     }
 }
+
+

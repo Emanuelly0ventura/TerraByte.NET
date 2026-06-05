@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TerraByte.Aplicacao.Servicos.Interfaces;
+using TerraByte.Application.Services.Interfaces;
 
-namespace TerraByte.Api.Controladores;
+namespace TerraByte.Api.Controllers;
 
 [ApiController]
 [Route("api/pesquisas")]
 [Produces("application/json")]
-public class PesquisasController(IServicoPesquisa servicoPesquisa) : ControllerBase
+public class PesquisasController(IRegistroPesquisaService servicoPesquisa) : ControllerBase
 {
     [HttpGet("clima")]
     [ProducesResponseType(StatusCodes.Status200OK)]

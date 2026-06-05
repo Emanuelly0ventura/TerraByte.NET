@@ -1,8 +1,8 @@
-﻿using TerraByte.Dominio.Entidades;
+﻿using TerraByte.Domain.Entities;
 
-namespace TerraByte.Aplicacao.Interfaces;
+namespace TerraByte.Application.Interfaces;
 
-public interface IRepositorioCultura : IRepositorio<Cultura>
+public interface ICulturaRepository : IRepository<Cultura>
 {
     IReadOnlyCollection<Cultura> BuscarPorTerrenoAgricola(Guid terrenoAgricolaId);
 }

@@ -1,36 +1,42 @@
-namespace TerraByte.Application.DTOs;
+﻿namespace TerraByte.Application.DTOs;
 
-public class AddressLookupResponse
+public class RespostaConsultaEndereco
 {
     public string Cep { get; set; } = string.Empty;
-    public string Street { get; set; } = string.Empty;
-    public string District { get; set; } = string.Empty;
-    public string City { get; set; } = string.Empty;
-    public string State { get; set; } = string.Empty;
+    public string Logradouro { get; set; } = string.Empty;
+    public string Bairro { get; set; } = string.Empty;
+    public string Cidade { get; set; } = string.Empty;
+    public string Estado { get; set; } = string.Empty;
 }
 
-public class GeocodeResponse
+public class RespostaGeocodificacao
 {
-    public string Name { get; set; } = string.Empty;
+    public string Nome { get; set; } = string.Empty;
     public double Latitude { get; set; }
     public double Longitude { get; set; }
 }
 
-public class ClimateForecastResponse
+public class RespostaPrevisaoClimatica
 {
     public double Latitude { get; set; }
     public double Longitude { get; set; }
-    public int Days { get; set; }
-    public string Summary { get; set; } = string.Empty;
+    public int Dias { get; set; }
+    public string Resumo { get; set; } = string.Empty;
+    public double TemperaturaMinima { get; set; }
+    public double TemperaturaMaxima { get; set; }
+    public double UmidadeMedia { get; set; }
+    public double ChuvaAcumuladaMm { get; set; }
 }
 
-public class SoilClassificationResponse
+public class RespostaClassificacaoSolo
 {
     public double Latitude { get; set; }
     public double Longitude { get; set; }
-    public string SoilName { get; set; } = string.Empty;
-    public double Clay { get; set; }
-    public double Sand { get; set; }
-    public double Silt { get; set; }
-    public double SoilRadiusKm { get; set; } = 5.55;
+    public string NomeSolo { get; set; } = string.Empty;
+    public double Argila { get; set; }
+    public double Areia { get; set; }
+    public double Silte { get; set; }
+    public double RaioSoloKm { get; set; } = 5.55;
 }
+
+

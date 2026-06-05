@@ -1,11 +1,12 @@
-namespace TerraByte.Application.Interfaces;
+﻿namespace TerraByte.Application.Interfaces;
 
 public interface IRepository<T> where T : class
 {
-    IReadOnlyCollection<T> FetchAll();
-    T? FetchById(Guid id);
-    void Create(T entity);
-    void Patch(T entity);
-    void Delete(T entity);
-    void SaveChanges();
+    IReadOnlyCollection<T> ListarTodos();
+    T? BuscarPorId(Guid id);
+    void Criar(T entidade);
+    void AtualizarParcial(T entidade);
+    void Excluir(T entidade);
+    void SalvarAlteracoes();
 }
+

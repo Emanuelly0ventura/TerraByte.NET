@@ -1,40 +1,41 @@
-using System.Reflection;
+﻿using System.Reflection;
 using Microsoft.OpenApi.Models;
 using TerraByte.Api.Extensions;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
+builder.Services.AddSwaggerGen(opcoes =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo
+    opcoes.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "TerraByte API",
         Version = "v1",
-        Description = "API para apoiar agricultores com consultas de clima, solo, localização de terrenos e culturas."
+        Description = "API para apoiar agricultores com consultas de clima, solo, localizacao de terrenos e culturas."
     });
 
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     if (File.Exists(xmlPath))
-        options.IncludeXmlComments(xmlPath);
+        opcoes.IncludeXmlComments(xmlPath);
 });
 
 builder.Services
-    .AddTerraBytePersistence(builder.Configuration)
-    .AddTerraByteServices()
-    .AddExternalApiClients();
+    .AdicionarPersistenciaTerraByte(builder.Configuration)
+    .AdicionarServicosTerraByte()
+    .AdicionarClientesApisExternas();
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(options =>
+    app.UseSwaggerUI(opcoes =>
     {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "TerraByte API v1");
-        options.RoutePrefix = "swagger";
+        opcoes.SwaggerEndpoint("/swagger/v1/swagger.json", "TerraByte API v1");
+        opcoes.RoutePrefix = "swagger";
     });
 }
 
@@ -43,3 +44,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+

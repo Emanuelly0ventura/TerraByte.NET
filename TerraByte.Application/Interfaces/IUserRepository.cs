@@ -1,6 +1,8 @@
-﻿namespace TerraByte.Application.Interfaces;
+﻿using TerraByte.Domain.Entities;
 
-public class IUserController
+namespace TerraByte.Application.Interfaces;
+
+public interface IUserRepository : IRepository<Usuario>
 {
-    
+    Usuario? BuscarPorEmail(string email);
 }

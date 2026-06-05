@@ -1,15 +1,18 @@
-﻿using TerraByte.Dominio.Entidades;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+using TerraByte.Domain.Entities;
 
-namespace TerraByte.Aplicacao.Dtos;
+namespace TerraByte.Application.DTOs;
 
-public class RequisicaoTerrenoAgricola
+public class TerrenoAgricolaDtos
 {
     [JsonPropertyName("nome")]
     public string Nome { get; set; } = string.Empty;
 
     [JsonPropertyName("cep")]
     public string Cep { get; set; } = string.Empty;
+
+    [JsonPropertyName("usuarioId")]
+    public Guid UsuarioId { get; set; }
 }
 
 public class RequisicaoAtualizarTerrenoAgricola

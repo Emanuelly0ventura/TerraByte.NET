@@ -1,10 +1,10 @@
-using TerraByte.Aplicacao.Dtos;
-using TerraByte.Aplicacao.Servicos.Externo;
-using TerraByte.Aplicacao.Servicos.Interfaces;
+using TerraByte.Application.DTOs;
+using TerraByte.Application.Services.External;
+using TerraByte.Application.Services.Interfaces;
 
-namespace TerraByte.Aplicacao.Servicos.Implementacoes;
+namespace TerraByte.Application.Services.Implementations;
 
-public class ServicoPesquisa(IClienteClima clienteClima) : IServicoPesquisa
+public class RegistroPesquisaService(IClienteClima clienteClima) : IRegistroPesquisaService
 {
     public Task<RespostaPrevisaoClimatica> BuscarClimaAsync(double latitude, double longitude, int days)
     {

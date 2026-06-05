@@ -1,8 +1,8 @@
-﻿using TerraByte.Dominio.Entidades;
+﻿using TerraByte.Domain.Entities;
 
-namespace TerraByte.Aplicacao.Dtos;
+namespace TerraByte.Application.DTOs;
 
-public class RespostaRegistroPesquisa
+public class RegistroPesquisaDtos
 {
     public Guid Id { get; set; }
     public string Fonte { get; set; } = string.Empty;
@@ -11,7 +11,7 @@ public class RespostaRegistroPesquisa
     public DateTime SolicitadoEm { get; set; }
     public Guid TerrenoAgricolaId { get; set; }
 
-    public static RespostaRegistroPesquisa DoDominio(RegistroPesquisa registro) => new()
+    public static RegistroPesquisaDtos DoDominio(RegistroPesquisaDtos registro) => new()
     {
         Id = registro.Id,
         Fonte = registro.Fonte,

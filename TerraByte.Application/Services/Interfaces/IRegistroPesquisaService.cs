@@ -1,8 +1,8 @@
-﻿using TerraByte.Aplicacao.Dtos;
+﻿using TerraByte.Application.DTOs;
 
-namespace TerraByte.Aplicacao.Servicos.Interfaces;
+namespace TerraByte.Application.Services.Interfaces;
 
-public interface IServicoPesquisa
+public interface IRegistroPesquisaService
 {
     Task<RespostaPrevisaoClimatica> BuscarClimaAsync(double latitude, double longitude, int days);
 }

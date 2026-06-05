@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TerraByte.Aplicacao.Servicos.Interfaces;
+using TerraByte.Application.Services.Interfaces;
 
-namespace TerraByte.Api.Controladores;
+namespace TerraByte.Api.Controllers;
 
 [ApiController]
 [Route("api")]
 [Produces("application/json")]
-public class CulturasController(IServicoCultura servicoCultura) : ControllerBase
+public class CulturasController(ICulturaService servicoCultura) : ControllerBase
 {
     [HttpGet("plantios")]
     [ProducesResponseType(StatusCodes.Status200OK)]
