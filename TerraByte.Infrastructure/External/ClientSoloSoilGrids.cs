@@ -1,11 +1,11 @@
 ﻿using System.Globalization;
 using System.Text.Json;
-using TerraByte.Aplicacao.Dtos;
-using TerraByte.Aplicacao.Servicos.Externo;
+using TerraByte.Application.DTOs;
+using TerraByte.Application.Services.External;
 
-namespace TerraByte.Infraestrutura.Externo;
+namespace TerraByte.Infrastructure.External;
 
-public class ClienteSoloSoilGrids(HttpClient httpClient) : IClienteSolo
+public class ClientSoloSoilGrids(HttpClient httpClient) : IClienteSolo
 {
     private const double SoilSearchRadiusKm = 5.55;
 
@@ -31,29 +31,65 @@ public class ClienteSoloSoilGrids(HttpClient httpClient) : IClienteSolo
             };
         }
 
-        throw new InvalidOperationException("SoilGrids nao retornou valores de argila, areia e silte no raio configurado.");
+        return new RespostaClassificacaoSolo
+        {
+            Latitude = latitude,
+            Longitude = longitude,
+            NomeSolo = "SOLO INDEFINIDO",
+            Argila = 0,
+            Areia = 0,
+            Silte = 0,
+            RaioSoloKm = SoilSearchRadiusKm
+        };
     }
 
     private async Task<(double Argila, double Areia, double Silte)?> TryFetchSoilAtPointAsync(double latitude, double longitude)
     {
         var lat = latitude.ToString(CultureInfo.InvariantCulture);
         var lon = longitude.ToString(CultureInfo.InvariantCulture);
-        var url = $"soilgrids/v2.0/properties/query?lat={lat}&lon={lon}&propriedade=clay&propriedade=sand&propriedade=silt&depth=0-5cm&value=mean";
 
-        using var response = await httpClient.GetAsync(url);
-        response.EnsureSuccessStatusCode();
+        var url =
+            $"soilgrids/v2.0/properties/query" +
+            $"?lat={lat}" +
+            $"&lon={lon}" +
+            $"&property=clay" +
+            $"&property=sand" +
+            $"&property=silt" +
+            $"&depth=0-5cm" +
+            $"&value=mean";
 
-        await using var stream = await response.Content.ReadAsStreamAsync();
-        using var document = await JsonDocument.ParseAsync(stream);
+        try
+        {
+            using var response = await httpClient.GetAsync(url);
 
-        var clay = ReadSoilProperty(document.RootElement, "clay");
-        var sand = ReadSoilProperty(document.RootElement, "sand");
-        var silt = ReadSoilProperty(document.RootElement, "silt");
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"Erro SoilGrids: {(int)response.StatusCode}");
+                return null;
+            }
 
-        if (clay is null || sand is null || silt is null)
-            return null;
+            await using var stream = await response.Content.ReadAsStreamAsync();
+            using var document = await JsonDocument.ParseAsync(stream);
 
-        return (clay.Value, sand.Value, silt.Value);
+            var clay = ReadSoilProperty(document.RootElement, "clay");
+            var sand = ReadSoilProperty(document.RootElement, "sand");
+            var silt = ReadSoilProperty(document.RootElement, "silt");
+
+            if (clay is null || sand is null || silt is null)
+                return null;
+
+            return (clay.Value, sand.Value, silt.Value);
+        }
+        catch (TaskCanceledException)
+        {
+            throw new InvalidOperationException(
+                "A consulta ao SoilGrids excedeu o tempo limite.");
+        }
+        catch (HttpRequestException ex)
+        {
+            throw new InvalidOperationException(
+                $"Erro ao consultar SoilGrids: {ex.Message}");
+        }
     }
 
     private static double? ReadSoilProperty(JsonElement root, string propertyName)
@@ -113,7 +149,6 @@ public class ClienteSoloSoilGrids(HttpClient httpClient) : IClienteSolo
 
         return (clay / total * 100, sand / total * 100, silt / total * 100);
     }
-
     private static string ClassifyTexture(double clay, double sand, double silt)
     {
         if (silt >= 80 && clay < 12)

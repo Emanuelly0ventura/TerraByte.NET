@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TerraByte.Aplicacao.Interfaces;
-using TerraByte.Dominio.Entidades;
-using TerraByte.Infraestrutura.Persistencia;
+using TerraByte.Application.Interfaces;
+using TerraByte.Domain.Entities;
+using TerraByte.Infrastructure.Persistence;
 
-namespace TerraByte.Infraestrutura.Repositorios;
+namespace TerraByte.Infrastructure.Repositories;
 
-public class RepositorioUsuario(TerraByteContext context) : IRepositorioUsuario
+public class UserRepository(TerraByteContext context) : IUserRepository
 {
     public IReadOnlyCollection<Usuario> ListarTodos()
     {

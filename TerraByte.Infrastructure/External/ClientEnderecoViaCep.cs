@@ -1,10 +1,10 @@
 ﻿using System.Text.Json;
-using TerraByte.Aplicacao.Dtos;
-using TerraByte.Aplicacao.Servicos.Externo;
+using TerraByte.Application.DTOs;
+using TerraByte.Application.Services.External;
 
-namespace TerraByte.Infraestrutura.Externo;
+namespace TerraByte.Infrastructure.External;
 
-public class ClienteEnderecoViaCep(HttpClient httpClient) : IClienteConsultaEndereco
+public class ClientEnderecoViaCep(HttpClient httpClient) : IExternalApiClient
 {
     public async Task<RespostaConsultaEndereco?> BuscarEnderecoAsync(string cep)
     {
@@ -18,8 +18,17 @@ public class ClienteEnderecoViaCep(HttpClient httpClient) : IClienteConsultaEnde
         using var document = await JsonDocument.ParseAsync(stream);
         var root = document.RootElement;
 
-        if (root.TryGetProperty("erro", out var erro) && erro.GetBoolean())
-            return null;
+        if (root.TryGetProperty("erro", out var erro))
+        {
+            if (
+                (erro.ValueKind == JsonValueKind.True) ||
+                (erro.ValueKind == JsonValueKind.String &&
+                 erro.GetString()?.Equals("true", StringComparison.OrdinalIgnoreCase) == true)
+            )
+            {
+                return null;
+            }
+        }
 
         return new RespostaConsultaEndereco
         {

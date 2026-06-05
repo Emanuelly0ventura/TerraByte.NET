@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TerraByte.Aplicacao.Interfaces;
-using TerraByte.Infraestrutura.Persistencia;
+using TerraByte.Application.Interfaces;
+using TerraByte.Infrastructure.Persistence;
 
-namespace TerraByte.Infraestrutura.Repositorios;
+namespace TerraByte.Infrastructure.Repositories;
 
-public class Repositorio<T>(TerraByteContext context) : IRepositorio<T> where T : class
+public class Repository<T>(TerraByteContext context) : IRepository<T> where T : class
 {
     protected TerraByteContext Context { get; } = context;
     protected DbSet<T> Set => Context.Set<T>();

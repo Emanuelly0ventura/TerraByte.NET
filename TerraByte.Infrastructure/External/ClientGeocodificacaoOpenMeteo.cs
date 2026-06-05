@@ -1,11 +1,10 @@
-﻿using System.Globalization;
-using System.Text.Json;
-using TerraByte.Aplicacao.Dtos;
-using TerraByte.Aplicacao.Servicos.Externo;
+﻿using System.Text.Json;
+using TerraByte.Application.DTOs;
+using TerraByte.Application.Services.External;
 
-namespace TerraByte.Infraestrutura.Externo;
+namespace TerraByte.Infrastructure.External;
 
-public class ClienteGeocodificacaoOpenMeteo(HttpClient httpClient) : IClienteGeocodificacao
+public class ClientGeocodificacaoOpenMeteo(HttpClient httpClient) : IClienteGeocodificacao
 {
     public async Task<RespostaGeocodificacao?> BuscarCoordenadasAsync(string localizacao)
     {

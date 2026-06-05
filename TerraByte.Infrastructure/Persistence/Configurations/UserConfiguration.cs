@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TerraByte.Dominio.Entidades;
+using TerraByte.Domain.Entities;
 
-public class ConfiguracaoUsuario : IEntityTypeConfiguration<Usuario>
+namespace TerraByte.Infrastructure.Persistence.Configurations;
+
+public class UserConfiguration : IEntityTypeConfiguration<Usuario>
 {
     public void Configure(EntityTypeBuilder<Usuario> builder)
     {
@@ -41,4 +43,3 @@ public class ConfiguracaoUsuario : IEntityTypeConfiguration<Usuario>
     
     
 }
-

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TerraByte.Dominio.Entidades;
+using TerraByte.Domain.Entities;
 
-namespace TerraByte.Infraestrutura.Persistencia;
+namespace TerraByte.Infrastructure.Persistence;
 
 public class TerraByteContext(DbContextOptions<TerraByteContext> opcoes) : DbContext(opcoes)
 {

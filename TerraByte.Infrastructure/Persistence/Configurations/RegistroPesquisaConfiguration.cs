@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TerraByte.Dominio.Entidades;
+using TerraByte.Domain.Entities;
 
-namespace TerraByte.Infraestrutura.Persistencia.Configuracoes;
+namespace TerraByte.Infrastructure.Persistence.Configurations;
 
-public class ConfiguracaoRegistroPesquisa : IEntityTypeConfiguration<RegistroPesquisa>
+public class RegistroPesquisaConfiguration : IEntityTypeConfiguration<RegistroPesquisa>
 {
     public void Configure(EntityTypeBuilder<RegistroPesquisa> builder)
     {

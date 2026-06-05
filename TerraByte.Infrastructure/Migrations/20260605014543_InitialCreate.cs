@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace TerraByte.Infraestrutura.Migrations
+namespace TerraByte.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class CriacaoInicial : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -46,8 +46,8 @@ namespace TerraByte.Infraestrutura.Migrations
                     Argila = table.Column<double>(type: "REAL", nullable: false),
                     Areia = table.Column<double>(type: "REAL", nullable: false),
                     Silte = table.Column<double>(type: "REAL", nullable: false),
-                    UsuarioId = table.Column<Guid>(type: "TEXT", nullable: false),
                     RaioSoloKm = table.Column<double>(type: "REAL", nullable: false),
+                    UsuarioId = table.Column<Guid>(type: "TEXT", nullable: false),
                     CriadoEm = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -138,5 +138,3 @@ namespace TerraByte.Infraestrutura.Migrations
         }
     }
 }
-
-
