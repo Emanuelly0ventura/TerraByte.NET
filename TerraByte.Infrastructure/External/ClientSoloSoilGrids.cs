@@ -158,38 +158,38 @@ public class ClientSoloSoilGrids(HttpClient httpClient) : IClienteSolo
             return "AREIA";
 
         if (sand >= 70 && sand < 90 && silt + 1.5 * clay >= 15 && silt + 2 * clay < 30)
-            return "AREIA FRANCA";
+            return "AREIA_FRANCA";
 
         if ((clay >= 7 && clay < 20 && sand > 52 && silt + 2 * clay >= 30)
             || (clay < 7 && silt < 50 && sand > 43))
-            return "FRANCO ARENOSO";
+            return "FRANCO_ARENOSO";
 
         if (clay >= 7 && clay < 27 && silt >= 28 && silt < 50 && sand <= 52)
             return "FRANCO";
 
         if ((silt >= 50 && clay >= 12 && clay < 27)
             || (silt >= 50 && silt < 80 && clay < 12))
-            return "FRANCO SILTOSO";
+            return "FRANCO_SILTOSO";
 
         if (clay >= 20 && clay < 35 && silt < 28 && sand > 45)
-            return "FRANCO ARGILOARENOSO";
+            return "FRANCO_ARGILOARENOSO";
 
         if (clay >= 27 && clay < 40 && sand > 20 && sand <= 45)
-            return "FRANCO ARGILOSO";
+            return "FRANCO_ARGILOSO";
 
         if (clay >= 27 && clay < 40 && sand <= 20)
-            return "FRANCO ARGILOSSILTOSO";
+            return "FRANCO_ARGILOSSILTOSO";
 
         if (clay >= 35 && sand > 45)
-            return "ARGILA ARENOSA";
+            return "ARGILA_ARENOSA";
 
         if (clay >= 40 && silt >= 40)
-            return "ARGILA SILTOSA";
+            return "ARGILA_SILTOSA";
 
         if (clay >= 40 && sand <= 45 && silt < 40)
             return "ARGILA";
 
-        return "SOLO TEXTURAL INDEFINIDO";
+        return "SOLO_TEXTURAL_INDEFINIDO";
     }
 }
 

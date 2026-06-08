@@ -3,6 +3,7 @@ using TerraByte.Application.Interfaces;
 using TerraByte.Application.Services.Interfaces;
 using TerraByte.Domain.Entities;
 
+
 namespace TerraByte.Application.Services.Implementations;
 
 public class UserService(
@@ -38,7 +39,7 @@ public class UserService(
         {
             Nome = requisicao.Nome.Trim(),
             Email = email,
-            Senha = requisicao.Senha,
+            Senha = BCrypt.Net.BCrypt.HashPassword(requisicao.Senha),
             Telefone = LimparTextoOpcional(requisicao.Telefone),
             Genero = LimparTextoOpcional(requisicao.Genero),
             DataNascimento = requisicao.DataNascimento.ToDateTime(TimeOnly.MinValue),
@@ -53,12 +54,15 @@ public class UserService(
 
     public RespostaUsuario? Login(RequisicaoLogin requisicao)
     {
-        var usuario = repositorioUsuario.BuscarPorEmail(NormalizarEmail(requisicao.Email));
+        var usuario = repositorioUsuario.BuscarPorEmail(
+            NormalizarEmail(requisicao.Email));
 
         if (usuario is null)
             return null;
 
-        if (usuario.Senha != requisicao.Senha)
+        if (!BCrypt.Net.BCrypt.Verify(
+                requisicao.Senha,
+                usuario.Senha))
             return null;
 
         return RespostaUsuario.DoDominio(usuario);
@@ -86,7 +90,9 @@ public class UserService(
         usuario.FotoPerfil = requisicao.FotoPerfil;
 
         if (!string.IsNullOrWhiteSpace(requisicao.Senha))
-            usuario.Senha = requisicao.Senha;
+        {
+            usuario.Senha = BCrypt.Net.BCrypt.HashPassword(requisicao.Senha);
+        }
 
         repositorioUsuario.SalvarAlteracoes();
 

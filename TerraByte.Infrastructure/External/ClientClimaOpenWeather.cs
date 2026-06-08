@@ -10,6 +10,7 @@ public class ClientClimaOpenWeather(
     HttpClient httpClient,
     IConfiguration configuracao) : IClienteClima
 {
+    
     public async Task<RespostaPrevisaoClimatica> BuscarClimaAsync(double latitude, double longitude, int days)
     {
         var apiKey = configuracao["OpenWeather:ApiKey"];
@@ -23,7 +24,16 @@ public class ClientClimaOpenWeather(
         var url = $"data/2.5/forecast?lat={lat}&lon={lon}&cnt={timestamps}&units=metric&lang=pt_br&appid={apiKey}";
 
         using var response = await httpClient.GetAsync(url);
-        response.EnsureSuccessStatusCode();
+        if (!response.IsSuccessStatusCode)
+        {
+            return new RespostaPrevisaoClimatica
+            {
+                Latitude = latitude,
+                Longitude = longitude,
+                Dias = days,
+                Resumo = "Não foi possível consultar a previsão climática."
+            };
+        }
 
         await using var stream = await response.Content.ReadAsStreamAsync();
         using var document = await JsonDocument.ParseAsync(stream);

@@ -31,9 +31,9 @@ public class UserRepository(TerraByteContext context) : IUserRepository
         context.Usuarios.Add(usuario);
     }
 
-    public void AtualizarParcial(Usuario entidade)
+    public void AtualizarParcial(Usuario usuario)
     {
-        throw new NotImplementedException();
+        context.Usuarios.Update(usuario);
     }
 
     public void Excluir(Usuario usuario)

@@ -7,36 +7,9 @@ public static class TerraByteDataLoader
 {
     public static void PrepararBanco(TerraByteContext context)
     {
-        if (BancoExisteComEsquemaAntigo(context))
-            context.Database.EnsureDeleted();
-
-        context.Database.EnsureCreated();
+        context.Database.Migrate();
     }
-
-    private static bool BancoExisteComEsquemaAntigo(TerraByteContext context)
-    {
-        if (!context.Database.CanConnect())
-            return false;
-
-        var connection = context.Database.GetDbConnection();
-        var fecharDepois = connection.State != System.Data.ConnectionState.Open;
-
-        if (fecharDepois)
-            connection.Open();
-
-        try
-        {
-            using var command = connection.CreateCommand();
-            command.CommandText = "SELECT COUNT(*) FROM sqlite_master WHERE type = 'table' AND name = 'Usuario_terrabyte'";
-            var existeTabelaAtual = Convert.ToInt32(command.ExecuteScalar()) > 0;
-            return !existeTabelaAtual;
-        }
-        finally
-        {
-            if (fecharDepois)
-                connection.Close();
-        }
-    }
+    
     private static readonly Guid UsuarioId = Guid.Parse("10000000-0000-0000-0000-000000000001");
     private static readonly Guid TerrenoId = Guid.Parse("20000000-0000-0000-0000-000000000001");
 

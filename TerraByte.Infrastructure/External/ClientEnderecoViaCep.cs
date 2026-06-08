@@ -6,6 +6,12 @@ namespace TerraByte.Infrastructure.External;
 
 public class ClientEnderecoViaCep(HttpClient httpClient) : IExternalApiClient
 {
+    private static string GetStringOrEmpty(JsonElement root, string propertyName)
+    {
+        return root.TryGetProperty(propertyName, out var property)
+            ? property.GetString() ?? string.Empty
+            : string.Empty;
+    }
     public async Task<RespostaConsultaEndereco?> BuscarEnderecoAsync(string cep)
     {
         var normalizedCep = cep.Replace("-", "").Trim();
@@ -32,11 +38,11 @@ public class ClientEnderecoViaCep(HttpClient httpClient) : IExternalApiClient
 
         return new RespostaConsultaEndereco
         {
-            Cep = root.GetProperty("cep").GetString() ?? normalizedCep,
-            Logradouro = root.GetProperty("logradouro").GetString() ?? string.Empty,
-            Bairro = root.GetProperty("bairro").GetString() ?? string.Empty,
-            Cidade = root.GetProperty("localidade").GetString() ?? string.Empty,
-            Estado = root.GetProperty("uf").GetString() ?? string.Empty
+            Cep = GetStringOrEmpty(root, "cep"),
+            Logradouro = GetStringOrEmpty(root, "logradouro"),
+            Bairro = GetStringOrEmpty(root, "bairro"),
+            Cidade = GetStringOrEmpty(root, "localidade"),
+            Estado = GetStringOrEmpty(root, "uf")
         };
     }
 }
