@@ -1,16 +1,52 @@
-# TerraByte API
+# 🌱 TerraByte API
 
-## Descrição do Projeto
+## 📖 Descrição do Projeto
 
-O **TerraByte** é uma API REST em C# criada para apoiar agricultores na tomada de decisão sobre plantio, acompanhamento de terrenos e culturas.
+O TerraByte é uma API REST desenvolvida em C# com ASP.NET Core para auxiliar produtores rurais na análise de viabilidade agrícola.
 
-A proposta do sistema é reunir informações importantes para o planejamento agrícola, como endereço do terreno, latitude e longitude, previsão climática, dados de solo e registros internos sobre plantações.
+A solução integra informações de localização, clima e características do solo para gerar recomendações sobre plantio, permitindo que agricultores tomem decisões mais assertivas com base em dados reais.
 
-## Solução do Projeto
+O sistema utiliza integrações com APIs externas para obtenção automática de endereço, coordenadas geográficas, previsão climática e propriedades do solo.
 
-O projeto foi desenvolvido em camadas, seguindo uma organização parecida com a utilizada no PetCore:
+---
 
-```txt
+# 🎯 Objetivo da Solução
+
+O principal objetivo do TerraByte é apoiar a agricultura inteligente através da análise de compatibilidade entre culturas agrícolas e terrenos cadastrados.
+
+A aplicação permite:
+
+* Cadastro e gerenciamento de usuários;
+* Cadastro de terrenos agrícolas;
+* Consulta automática de endereço por CEP;
+* Identificação das características do solo;
+* Consulta de condições climáticas;
+* Análise de compatibilidade para plantio;
+* Armazenamento do histórico de análises realizadas.
+
+---
+
+# 🏗 Arquitetura do Projeto
+
+O projeto foi desenvolvido seguindo uma arquitetura em camadas para garantir organização, manutenção e escalabilidade.
+
+```text
+Usuário
+   ↓
+Controllers
+   ↓
+Services
+   ↓
+Repositories
+   ↓
+Entity Framework Core
+   ↓
+SQLite Database
+```
+
+### Estrutura da Solução
+
+```text
 TerraByte
 ├── TerraByte.Api
 ├── TerraByte.Application
@@ -18,203 +54,416 @@ TerraByte
 └── TerraByte.Infrastructure
 ```
 
-A API possui persistência em banco relacional com **Entity Framework Core** e **SQLite**, além de integração com APIs externas para enriquecer as informações agrícolas.
+### Responsabilidades das Camadas
 
-## Funcionalidades
+#### API
 
-- Cadastro, consulta, atualização e remoção de terrenos agrícolas
-- Cadastro e consulta de culturas por terreno
-- Consulta de endereço por CEP usando ViaCEP
-- Consulta de latitude e longitude por cidade usando Open-Meteo Geocoding
-- Consulta de propriedades de solo usando SoilGrids
-- Consulta de previsão climática de 1 a 30 dias usando OpenWeather
-- Registro de snapshots de pesquisa climática e de solo vinculados ao terreno
-- Documentação interativa com Swagger
-- Uso de migrations com Entity Framework Core
+Responsável pelos endpoints HTTP e comunicação com o cliente.
 
-## Tecnologias Utilizadas
+Controllers:
 
-- C#
-- ASP.NET Core
-- Entity Framework Core
-- SQLite
-- Swagger / Swashbuckle
-- HttpClient
-- ViaCEP
-- Open-Meteo Geocoding
-- OpenWeather
-- SoilGrids
+* UsuariosController
+* TerrenosController
+* CulturasController
+* PesquisasController
 
-## APIs Externas Utilizadas
+#### Application
+
+Contém as regras de negócio.
+
+Services:
+
+* UserService
+* TerrenoService
+* CulturaService
+* PesquisaService
+
+#### Infrastructure
+
+Responsável pelo acesso aos dados, repositórios e integração com APIs externas.
+
+#### Domain
+
+Contém as entidades do sistema.
+
+---
+
+# 🔗 Integrações Externas
+
+O TerraByte utiliza APIs externas para enriquecer os dados das análises.
 
 ### ViaCEP
 
-Utilizada para buscar endereço a partir de um CEP.
+Consulta de endereço a partir do CEP.
 
-Exemplo:
+### Open Meteo
 
-```txt
-https://viacep.com.br/ws/01001000/json/
-```
-
-### Open-Meteo Geocoding
-
-Utilizada para buscar latitude e longitude a partir do nome de uma cidade.
-
-Exemplo:
-
-```txt
-https://geocoding-api.open-meteo.com/v1/search?name=Ribeirao%20Preto&count=1&language=pt&format=json
-```
+Consulta de latitude e longitude.
 
 ### OpenWeather
 
-Utilizada para previsão climática de até 30 dias.
-
-Exemplo:
-
-```txt
-https://pro.openweathermap.org/data/2.5/forecast/climate?lat={lat}&lon={lon}&cnt=30&units=metric&appid={API_KEY}
-```
-
-A chave deve ser configurada no `appsettings.json`.
+Consulta de dados climáticos.
 
 ### SoilGrids
 
-Utilizada para consulta de propriedades de solo por latitude e longitude.
+Consulta de características do solo.
 
-Exemplo de propriedade consultada:
+Fluxo:
 
-```txt
-clay
+```text
+CEP
+ ↓
+ViaCEP
+ ↓
+Endereço
+ ↓
+Open Meteo
+ ↓
+Latitude / Longitude
+ ↓
+SoilGrids
+ ↓
+Dados do Solo
 ```
 
-## Relacionamentos do Banco
+---
 
-O projeto possui relacionamento **1:N** entre:
+# 🗄 Banco de Dados
 
-```txt
-FarmPlot -> Crops
-FarmPlot -> ResearchSnapshots
+O sistema utiliza SQLite como banco de dados principal.
+
+## Tabelas
+
+* Usuario_terrabyte
+* Plantio_terrabyte
+* TipoSolo_terrabyte
+* Defensivo_terrabyte
+* plan_tip_terrabyte
+* plan_def_terrabyte
+* EnderecoPlantio_terrabyte
+* AnalisePlantio_terrabyte
+
+## Diagrama Conceitual
+
+```text
+Usuario
+   │
+   └── 1:N
+         │
+         ▼
+EnderecoPlantio
+
+Plantio
+   │
+   ├── N:N TipoSolo
+   │
+   └── N:N Defensivo
+
+Plantio
+   │
+   └── 1:N
+         │
+         ▼
+AnalisePlantio
 ```
 
-Ou seja, um terreno pode ter várias culturas e várias pesquisas salvas.
+## Relacionamentos
 
-## Documentação das Rotas
+### Plantio ↔ TipoSolo
 
-### Terrenos
+Relacionamento N:N.
 
-```http
-GET /api/FarmPlots
-GET /api/FarmPlots/{id}
-POST /api/FarmPlots
-PUT /api/FarmPlots/{id}
-DELETE /api/FarmPlots/{id}
+Uma cultura pode ser compatível com vários tipos de solo.
+
+Um tipo de solo pode atender várias culturas.
+
+Tabela intermediária:
+
+```text
+plan_tip_terrabyte
 ```
 
-### Culturas
+### Plantio ↔ Defensivo
 
-```http
-GET /api/farm-plots/{farmPlotId}/crops
-GET /api/crops/{id}
-POST /api/farm-plots/{farmPlotId}/crops
-DELETE /api/crops/{id}
+Relacionamento N:N.
+
+Uma cultura pode utilizar vários defensivos.
+
+Um defensivo pode ser utilizado em várias culturas.
+
+Tabela intermediária:
+
+```text
+plan_def_terrabyte
 ```
 
-### Pesquisas Externas
+---
 
-```http
-GET /api/Research/cep/{cep}
-GET /api/Research/geocode?city={cidade}
-GET /api/Research/climate?latitude={lat}&longitude={lon}&days={dias}
-GET /api/Research/soil?latitude={lat}&longitude={lon}&property={propriedade}
-POST /api/Research/farm-plots/{farmPlotId}/climate-snapshots
-POST /api/Research/farm-plots/{farmPlotId}/soil-snapshots
+# ⚙ Migrations
+
+O projeto utiliza Entity Framework Core Migrations para controle de versão do banco de dados.
+
+## Criar Migration
+
+```bash
+dotnet ef migrations add NomeDaMigration
 ```
 
-## Configuração do Projeto
+## Atualizar Banco
 
-No arquivo:
-
-```txt
-TerraByte.Api/appsettings.json
+```bash
+dotnet ef database update
 ```
 
-configure a connection string do SQLite:
+## Benefícios
 
-```json
-{
-  "ConnectionStrings": {
-    "TerraByteSqlite": "Data Source=terrabyte.db"
-  }
-}
+* Controle de alterações do banco;
+* Versionamento da estrutura;
+* Facilidade de atualização em diferentes ambientes.
+
+---
+
+# 🚀 Como Executar o Projeto
+
+## 1. Clonar Repositório
+
+```bash
+git clone URL_DO_REPOSITORIO
 ```
 
-Para usar a API de previsão climática, configure também sua chave da OpenWeather:
-
-```json
-{
-  "OpenWeather": {
-    "ApiKey": "sua_api_key"
-  }
-}
-```
-
-## Como Executar o Projeto
-
-### 1. Restaurar os Pacotes
-
-Na pasta raiz da solução, execute:
+## 2. Restaurar Dependências
 
 ```bash
 dotnet restore
 ```
 
-### 2. Compilar o Projeto
+## 3. Compilar
 
 ```bash
 dotnet build
 ```
 
-### 3. Aplicar as Migrations
+## 4. Aplicar Migrations
 
 ```bash
-dotnet ef database update --project TerraByte.Infrastructure --startup-project TerraByte.Api --context TerraByteContext
+dotnet ef database update
 ```
 
-### 4. Executar a API
+## 5. Executar(o link do swagger vai aparecer aqui)
 
 ```bash
 dotnet run --project TerraByte.Api
 ```
 
-### 5. Acessar o Swagger
+---
 
-Com a API em execução, acesse:
+# 📄 Swagger
 
-```txt
-http://localhost:5292/swagger
+Após iniciar a aplicação(exemplo):
+
+```text
+http://localhost:xxxx/swagger
 ```
 
-ou a porta exibida no terminal.
+O Swagger permite testar todos os endpoints diretamente pelo navegador.
 
-## Como Criar uma Nova Migration
+---
 
-Sempre que uma entidade ou configuração de banco for alterada, crie uma nova migration:
+# 🧪 Testes da API
 
-```bash
-dotnet ef migrations add NomeDaMigration --project TerraByte.Infrastructure --startup-project TerraByte.Api --context TerraByteContext --output-dir Migrations
+Os testes foram realizados através do Swagger e Postman.
+
+## Teste 1 – Cadastro de Usuário
+
+```http
+POST /api/usuarios/cadastro
 ```
 
-Depois aplique no banco:
+Exemplo:
 
-```bash
-dotnet ef database update --project TerraByte.Infrastructure --startup-project TerraByte.Api --context TerraByteContext
+```json
+{
+  "nome": "nometeste",
+  "email": "teste@gmail.com",
+  "senha": "12345678",
+  "telefone": "11986547664",
+  "genero": "Feminino",
+  "dataNascimento": "2000-06-08",
+  "fotoPerfil": "string"
+}
+
 ```
 
-## Observações
+Resultado esperado(infromações de exemplo):
 
-- A API de clima da OpenWeather precisa de uma chave de API válida.
-- A API pode ser testada pelo Swagger usando a opção `Try it out`.
-- O arquivo `TerraByte.Api/TerraByte.Api.http` possui exemplos de requisições para teste.
-- O banco SQLite local é criado no arquivo `terrabyte.db`.
+```http
+201 Created
+```
+
+---
+
+## Teste 2 – Login
+
+```http
+POST /api/usuarios/login
+```
+Exemplo:
+
+```json
+{
+  "email": "teste@gmail.com",
+  "senha": "12345678"
+}
+
+
+```
+
+Resultado esperado(infromações de exemplo):
+
+```http
+200 OK
+```
+
+---
+
+## Teste 3 – Cadastro de Terreno
+
+```http
+POST /api/terrenos
+```
+
+Exemplo(caso o id do usuario n funcione e so copiar o id do usuario q vc cadastrou):
+
+```json
+{
+  "nome": "Sitio Amarelo",
+  "cep": "13291-256",
+  "usuarioId": "3582fb0d-2664-488b-8303-7af2804e9e91"
+}
+
+```
+
+Resultado esperado(infromações de exemplo):
+
+* Consulta ViaCEP;
+* Consulta Open Meteo;
+* Consulta SoilGrids;
+* Salvamento do terreno.
+
+---
+
+## Teste 4 – Análise Agrícola
+
+```http
+POST /api/analise
+```
+
+Exemplo:
+
+```json
+terreno - id do terro q acabou de criar
+
+plnatio - id do plantio(pode achar depois de fazer um getAll)
+
+```
+
+Resultado esperado(infromações de exemplo):
+
+```json
+{
+  "pontuacao": 85,
+  "nivelRisco": "BAIXO",
+  "recomendacao": "Plantio recomendado"
+}
+```
+
+---
+
+## Teste 5 - Pesquisa Clima
+
+```http
+GET /api/pesquisas/clima
+```
+
+Exemplo:
+
+```json
+lat:-23.69389
+long:-46.565
+
+```
+
+Resultado esperado(infromações de exemplo):
+
+```json
+{
+
+  "latitude": -23.69389,
+  "longitude": -46.565,
+  "dias": 30,
+  "resumo": "Previsao solicitada para 30 dia(s). A API retornou 40 leituras de 3 em 3 horas: minima 11,6 C, maxima 23,5 C, umidade media 69,5% e chuva acumulada aproximada de 14,7 mm.",
+  "temperaturaMinima": 11.62,
+  "temperaturaMaxima": 23.54,
+  "umidadeMedia": 69.475,
+  "chuvaAcumuladaMm": 14.709999999999997
+
+}
+```
+
+# ❌ Tratamento de Erros
+
+A aplicação possui validações e middleware global para captura de exceções.
+
+Exemplos:
+
+### CEP inválido
+
+```http
+400 Bad Request
+```
+
+### Usuário não encontrado
+
+```http
+404 Not Found
+```
+
+### Dados obrigatórios ausentes
+
+```http
+400 Bad Request
+```
+
+---
+
+# 🎬 Vídeo Demonstração
+
+**Link:** link do video
+
+---
+
+# 🎤 Vídeo Pitch
+
+**Link:** link do video
+
+---
+
+## 👩‍💻 Time
+
+### Carolina Nascimento Gonçalves
+RM564786 - 2TDSPJ
+
+### Julia Sayuri Kina
+RM564555 - 2TDSPJ
+
+### Emanuelly Ventura do Nascimento
+RM562339 - 2TDSPJ
+---
+
+# 🔗 Repositório GitHub
+
+Link do projeto:
+
+```text
+https://github.com/Emanuelly0ventura/TerraByte.NET.git
+```
