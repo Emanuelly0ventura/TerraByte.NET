@@ -16,11 +16,12 @@ public class TerrenoAgricola
     public double Areia { get; set; }
     public double Silte { get; set; }
     public double RaioSoloKm { get; set; }
+    public Guid? TipoSoloId { get; set; }
+    public TipoSolo? TipoSolo { get; set; }
     public Guid UsuarioId { get; set; }
     public Usuario Usuario { get; set; } = null!;
     public DateTime CriadoEm { get; set; } = DateTime.UtcNow;
 
-    public List<Cultura> Culturas { get; set; } = [];
     public List<RegistroPesquisa> RegistrosPesquisa { get; set; } = [];
 }
 

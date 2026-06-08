@@ -9,6 +9,9 @@ public class TerraByteContext(DbContextOptions<TerraByteContext> opcoes) : DbCon
     public DbSet<Cultura> Culturas => Set<Cultura>();
     public DbSet<RegistroPesquisa> RegistrosPesquisa => Set<RegistroPesquisa>();
     public DbSet<Usuario> Usuarios => Set<Usuario>();
+    public DbSet<TipoSolo> TiposSolo => Set<TipoSolo>();
+    public DbSet<Defensivo> Defensivos => Set<Defensivo>();
+
     protected override void OnModelCreating(ModelBuilder montadorModelo)
     {
         montadorModelo.ApplyConfigurationsFromAssembly(typeof(TerraByteContext).Assembly);

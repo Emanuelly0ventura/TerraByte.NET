@@ -11,16 +11,17 @@ public class TerrenoAgricolaRepository(TerraByteContext context)
     public override IReadOnlyCollection<TerrenoAgricola> ListarTodos()
     {
         return Context.TerrenosAgricolas
-            .Include(x => x.Culturas)
+            .Include(x => x.TipoSolo)
+            .Include(x => x.Usuario)
             .ToList();
     }
 
     public override TerrenoAgricola? BuscarPorId(Guid id)
     {
         return Context.TerrenosAgricolas
-            .Include(x => x.Culturas)
+            .Include(x => x.TipoSolo)
+            .Include(x => x.Usuario)
             .Include(x => x.RegistrosPesquisa)
             .FirstOrDefault(x => x.Id == id);
     }
 }
-

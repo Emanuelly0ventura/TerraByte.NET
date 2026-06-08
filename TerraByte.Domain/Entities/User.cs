@@ -12,4 +12,6 @@ public class Usuario
     public string? FotoPerfil { get; set; }
     public ICollection<TerrenoAgricola> TerrenosAgricolas { get; set; }
         = new List<TerrenoAgricola>();
+    public ICollection<RegistroPesquisa> RegistrosPesquisa { get; set; }
+        = new List<RegistroPesquisa>();
 }

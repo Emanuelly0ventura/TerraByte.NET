@@ -2,7 +2,7 @@
 
 namespace TerraByte.Application.Interfaces;
 
-public interface ICulturaRepository : IRepository<Cultura>
+public interface IDefensivoRepository: IRepository<Defensivo>
 {
+    
 }
-

@@ -24,6 +24,7 @@ public static class ExtensoesColecaoServicos
         servicos.AddScoped<ICulturaRepository, CulturaRepository>();
         servicos.AddScoped<IRegistroPesquisaRepository, RegistroPesquisaRepository>();
         servicos.AddScoped<IUserRepository, UserRepository>();
+        servicos.AddScoped<IDefensivoRepository, DefensivoRepository>();
 
         return servicos;
     }
@@ -34,6 +35,7 @@ public static class ExtensoesColecaoServicos
         servicos.AddScoped<ICulturaService, CulturaService>();
         servicos.AddScoped<IRegistroPesquisaService, RegistroPesquisaService>();
         servicos.AddScoped<IUserService, UserService>();
+        servicos.AddScoped<IDefensivoService, DefensivoService>();
 
         return servicos;
     }

@@ -8,7 +8,7 @@ public class UserConfiguration : IEntityTypeConfiguration<Usuario>
 {
     public void Configure(EntityTypeBuilder<Usuario> builder)
     {
-        builder.ToTable("TB_Users");
+        builder.ToTable("Usuario_terrabyte");
 
         builder.HasKey(x => x.Id);
 
@@ -20,9 +20,13 @@ public class UserConfiguration : IEntityTypeConfiguration<Usuario>
             .IsRequired()
             .HasMaxLength(200);
 
+        builder.HasIndex(x => x.Email)
+            .IsUnique();
+
         builder.Property(x => x.Senha)
-            .IsRequired();
-        
+            .IsRequired()
+            .HasMaxLength(255);
+
         builder.Property(x => x.Telefone)
             .HasMaxLength(20);
 
@@ -33,13 +37,17 @@ public class UserConfiguration : IEntityTypeConfiguration<Usuario>
             .HasMaxLength(500);
 
         builder.Property(x => x.DataNascimento)
+            .HasColumnType("date")
             .IsRequired();
-        
+
         builder.HasMany(x => x.TerrenosAgricolas)
             .WithOne(x => x.Usuario)
             .HasForeignKey(x => x.UsuarioId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(x => x.RegistrosPesquisa)
+            .WithOne(x => x.Usuario)
+            .HasForeignKey(x => x.UsuarioId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
-    
-    
 }

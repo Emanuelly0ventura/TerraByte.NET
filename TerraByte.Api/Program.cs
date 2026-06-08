@@ -1,11 +1,34 @@
 ﻿using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using TerraByte.Api.Extensions;
-
+using TerraByte.Api.Middleware;
+using TerraByte.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.Configure<ApiBehaviorOptions>(opcoes =>
+{
+    opcoes.InvalidModelStateResponseFactory = contexto =>
+    {
+        var erros = contexto.ModelState
+            .Where(item => item.Value?.Errors.Count > 0)
+            .ToDictionary(
+                item => item.Key,
+                item => item.Value!.Errors.Select(erro => erro.ErrorMessage).ToArray());
+
+        return new BadRequestObjectResult(new
+        {
+            status = StatusCodes.Status400BadRequest,
+            erro = "Requisicao invalida",
+            mensagem = "Um ou mais campos estao invalidos.",
+            campos = erros,
+            caminho = contexto.HttpContext.Request.Path.Value,
+            data = DateTime.UtcNow
+        });
+    };
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(opcoes =>
 {
@@ -29,6 +52,15 @@ builder.Services
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var contexto = scope.ServiceProvider.GetRequiredService<TerraByteContext>();
+    TerraByteDataLoader.PrepararBanco(contexto);
+    TerraByteDataLoader.Seed(contexto);
+}
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -44,5 +76,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-

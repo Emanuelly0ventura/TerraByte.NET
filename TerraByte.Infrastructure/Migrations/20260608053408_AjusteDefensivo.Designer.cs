@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TerraByte.Infrastructure.Persistence;
 
@@ -10,9 +11,11 @@ using TerraByte.Infrastructure.Persistence;
 namespace TerraByte.Infrastructure.Migrations
 {
     [DbContext(typeof(TerraByteContext))]
-    partial class TerraByteContextModelSnapshot : ModelSnapshot
+    [Migration("20260608053408_AjusteDefensivo")]
+    partial class AjusteDefensivo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.5");

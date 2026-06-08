@@ -26,7 +26,10 @@ public class UserService(
 
     public RespostaUsuario? Cadastrar(RequisicaoUsuario requisicao)
     {
-        var usuarioExistente = repositorioUsuario.BuscarPorEmail(requisicao.Email);
+        ValidarUsuario(requisicao.Nome, requisicao.Email, requisicao.Senha, requisicao.Telefone);
+
+        var email = NormalizarEmail(requisicao.Email);
+        var usuarioExistente = repositorioUsuario.BuscarPorEmail(email);
 
         if (usuarioExistente is not null)
             return null;
@@ -34,11 +37,11 @@ public class UserService(
         var usuario = new Usuario
         {
             Nome = requisicao.Nome.Trim(),
-            Email = requisicao.Email.Trim().ToLower(),
+            Email = email,
             Senha = requisicao.Senha,
-            Telefone = requisicao.Telefone,
-            Genero = requisicao.Genero,
-            DataNascimento = requisicao.DataNascimento,
+            Telefone = LimparTextoOpcional(requisicao.Telefone),
+            Genero = LimparTextoOpcional(requisicao.Genero),
+            DataNascimento = requisicao.DataNascimento.ToDateTime(TimeOnly.MinValue),
             FotoPerfil = requisicao.FotoPerfil
         };
 
@@ -50,7 +53,7 @@ public class UserService(
 
     public RespostaUsuario? Login(RequisicaoLogin requisicao)
     {
-        var usuario = repositorioUsuario.BuscarPorEmail(requisicao.Email);
+        var usuario = repositorioUsuario.BuscarPorEmail(NormalizarEmail(requisicao.Email));
 
         if (usuario is null)
             return null;
@@ -68,11 +71,18 @@ public class UserService(
         if (usuario is null)
             return null;
 
-        usuario.Nome = requisicao.Nome;
-        usuario.Email = requisicao.Email;
-        usuario.Telefone = requisicao.Telefone;
-        usuario.Genero = requisicao.Genero;
-        usuario.DataNascimento = requisicao.DataNascimento;
+        ValidarUsuario(requisicao.Nome, requisicao.Email, requisicao.Senha, requisicao.Telefone, senhaObrigatoria: false);
+
+        var email = NormalizarEmail(requisicao.Email);
+        var usuarioComMesmoEmail = repositorioUsuario.BuscarPorEmail(email);
+        if (usuarioComMesmoEmail is not null && usuarioComMesmoEmail.Id != id)
+            throw new ArgumentException("E-mail ja cadastrado para outro usuario.");
+
+        usuario.Nome = requisicao.Nome.Trim();
+        usuario.Email = email;
+        usuario.Telefone = LimparTextoOpcional(requisicao.Telefone);
+        usuario.Genero = LimparTextoOpcional(requisicao.Genero);
+        usuario.DataNascimento = requisicao.DataNascimento.ToDateTime(TimeOnly.MinValue);
         usuario.FotoPerfil = requisicao.FotoPerfil;
 
         if (!string.IsNullOrWhiteSpace(requisicao.Senha))
@@ -94,5 +104,38 @@ public class UserService(
         repositorioUsuario.SalvarAlteracoes();
 
         return true;
+    }
+
+    private static void ValidarUsuario(
+        string nome,
+        string email,
+        string senha,
+        string? telefone,
+        bool senhaObrigatoria = true)
+    {
+        if (string.IsNullOrWhiteSpace(nome) || nome.Trim().Length < 3)
+            throw new ArgumentException("O nome deve ter no minimo 3 letras.");
+
+        if (string.IsNullOrWhiteSpace(email) || !email.Contains('@'))
+            throw new ArgumentException("O e-mail e obrigatorio e deve conter @.");
+
+        if (senhaObrigatoria && (string.IsNullOrWhiteSpace(senha) || senha.Length < 8))
+            throw new ArgumentException("A senha deve ter no minimo 8 caracteres.");
+
+        if (!senhaObrigatoria && !string.IsNullOrWhiteSpace(senha) && senha.Length < 8)
+            throw new ArgumentException("A senha deve ter no minimo 8 caracteres.");
+
+        if (!string.IsNullOrWhiteSpace(telefone) && telefone.Trim().Length < 11)
+            throw new ArgumentException("O telefone deve ter no minimo 11 caracteres.");
+    }
+
+    private static string NormalizarEmail(string email)
+    {
+        return email.Trim().ToLowerInvariant();
+    }
+
+    private static string? LimparTextoOpcional(string? valor)
+    {
+        return string.IsNullOrWhiteSpace(valor) ? null : valor.Trim();
     }
 }
