@@ -26,6 +26,18 @@ A aplicação permite:
 
 ---
 
+## Diagrama Drawio
+
+![TerraByte.NET](/TerraByte.NET.drawio.png)
+
+---
+
+## Modelo Mer
+
+![TerraByte.NET](/mer_terrabyte.jpeg)
+
+---
+
 # 🏗 Arquitetura do Projeto
 
 O projeto foi desenvolvido seguindo uma arquitetura em camadas para garantir organização, manutenção e escalabilidade.
