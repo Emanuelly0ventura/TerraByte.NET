@@ -450,13 +450,13 @@ Exemplos:
 
 # 🎬 Vídeo Demonstração
 
-**Link:** link do video
+**Link:** [Clique Aqui!](https://youtu.be/ca4fy0gwtR0?si=mZdYQfgOI7fGICRs)
 
 ---
 
 # 🎤 Vídeo Pitch
 
-**Link:** link do video
+**Link:** [Clique Aqui!](https://youtu.be/3tU1FO5FDAM?si=bjW-iGhzHhDxOqno)
 
 ---
 
